@@ -20,7 +20,8 @@
 # MAGIC - its JSON key stored in a Databricks secret scope with the
 # MAGIC   Databricks CLI (never in a notebook, a file or git).
 # MAGIC
-# MAGIC **How:** fill in the widgets at the top of the page, then **Run all**.
+# MAGIC **How:** create `config/environment.yml` in your Git folder (or fill in
+# MAGIC the widgets), then **Run all** — see section 1.
 # MAGIC
 # MAGIC © 2026 Olivier Bouchez · CC BY-NC 4.0 · https://olivier-bouchez.com
 
@@ -39,7 +40,16 @@
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ## 1. Your settings (widgets)
+# MAGIC ## 1. Your settings
+# MAGIC
+# MAGIC Two ways to give them (the first one found is used):
+# MAGIC
+# MAGIC 1. **A file `config/environment.yml` in your Git folder** — copy of
+# MAGIC    `config/environment.example.yml` with your values. This file is
+# MAGIC    listed in `.gitignore`: it is **never committed** to GitHub.
+# MAGIC    (Workspace → your Git folder → `config` → **Create** → **File**.)
+# MAGIC 2. **The widgets** at the top of the notebook (`gcp_project_id`…),
+# MAGIC    when your Databricks editor shows them.
 # MAGIC
 # MAGIC `catalog` and `schema` (created by `lib/config`) choose the Unity
 # MAGIC Catalog location. On Databricks Free Edition the catalog is
@@ -55,14 +65,32 @@ dbutils.widgets.text("secret_scope", "statbel", "Databricks secret scope")
 dbutils.widgets.text("secret_key", "bigquery-sa-key", "Secret key name")
 dbutils.widgets.text("max_table_size_gb", "1", "Max BigQuery table size (GB)")
 
-settings = {
-    name: dbutils.widgets.get(name).strip()
-    for name in ("gcp_project_id", "bq_dataset", "bq_location",
-                 "secret_scope", "secret_key", "max_table_size_gb")
-}
-if not settings["gcp_project_id"]:
-    raise ValueError("Fill in the widget 'gcp_project_id' at the top, "
-                     "then run the notebook again.")
+local_file = os.path.join(find_project_root(), "config", "environment.yml")
+if os.path.exists(local_file):
+    local = load_yaml(local_file)
+    settings = {
+        "gcp_project_id": local["bigquery"]["project_id"],
+        "bq_dataset": local["bigquery"].get("dataset", "StatBel"),
+        "bq_location": local["bigquery"].get("location", "EU"),
+        "secret_scope": local["secrets"]["scope"],
+        "secret_key": local["secrets"]["bigquery_key"],
+        "max_table_size_gb": local["bigquery"].get("max_table_size_gb", 1),
+    }
+    print(f"Settings read from {local_file}")
+else:
+    settings = {
+        name: dbutils.widgets.get(name).strip()
+        for name in ("gcp_project_id", "bq_dataset", "bq_location",
+                     "secret_scope", "secret_key", "max_table_size_gb")
+    }
+    print("Settings read from the widgets")
+settings = {name: str(value).strip() for name, value in settings.items()}
+if settings["gcp_project_id"] in ("", "my-gcp-project"):
+    raise ValueError(
+        "No Google Cloud project ID: create config/environment.yml in your "
+        "Git folder (copy of environment.example.yml with your values) or "
+        "fill in the widget 'gcp_project_id', then run the notebook again."
+    )
 print(f"Unity Catalog: {CATALOG}.{SCHEMA}")
 for name, value in settings.items():
     print(f"  {name:<18} {value}")

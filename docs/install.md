@@ -114,10 +114,17 @@ Open them in `notebooks/` and use **Run all** (compute: **Serverless**).
 
 | Order | Notebook | First run | What to check |
 |---|---|---|---|
-| 1 | `00_setup` | 1 min | fill the widgets (`gcp_project_id`…), **Run all**: schema and volumes created, secret found, `Connected as: statbel-pipeline@…` |
+| 1 | `00_setup` | 1 min | your settings (see below), **Run all**: schema and volumes created, secret found, `Connected as: statbel-pipeline@…` |
 | 2 | `01_statbel_catalog` | 3-5 min | about 485 datasets, 1,075 files and 4,000+ described fields |
 | 3 | `02_load_statbel` | 10-20 min | one line per table in the report; keys `OK` or explained; orphan counts |
 | 4 | `03_publish_bigquery` | 5-10 min | summary table: rows, size, keys and described columns per table |
+
+**Your settings for `00_setup`.** In the Git folder, open `config`, then
+**Create** → **File**, name it `environment.yml` and paste the content of
+`environment.example.yml` with your values (at least `bigquery.project_id`).
+This file is in `.gitignore`: it stays in your workspace and is never
+committed. Alternatively, fill in the widgets of the notebook if your
+Databricks editor shows them.
 
 The `%restart_python` cell interrupts *Run all* for a second after the
 libraries are installed; the run continues by itself (if not, run **Run all**
