@@ -35,6 +35,7 @@ TABLE_KEYS = {
     "table", "enabled", "domain", "title", "period", "sources", "rename",
     "types", "filter", "keep_latest", "dictionary", "dictionary_aliases",
     "column_descriptions", "primary_key", "foreign_keys", "geography",
+    "personal_data",
 }
 SOURCE_KEYS = {"url", "format", "separator", "constants"}
 
@@ -93,6 +94,7 @@ def load_datasets(path=None):
             raise ValueError(f"{entry.get('table')}: unknown keys {unknown}")
         table = copy.deepcopy(entry)
         table.setdefault("enabled", True)
+        table.setdefault("personal_data", "none")
         for key in ("rename", "types", "dictionary_aliases",
                     "column_descriptions"):
             table[key] = table.get(key) or {}
@@ -110,6 +112,12 @@ def load_datasets(path=None):
         table["sources"] = sources
         tables.append(table)
     return tables
+
+
+def load_governance(path=None):
+    """Return the `governance` section of config/datasets.yml."""
+    path = path or os.path.join(find_project_root(), "config", "datasets.yml")
+    return load_yaml(path).get("governance") or {}
 
 
 def select_tables(selection, tables=None):

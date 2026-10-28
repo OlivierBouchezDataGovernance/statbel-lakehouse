@@ -1,0 +1,45 @@
+# OpenMetadata 2.0 - BigQuery connector: metadata ingestion (external run)
+#   pip install "openmetadata-ingestion[bigquery]"
+#   metadata ingest -c bigquery_metadata.yaml
+#
+# Use a READ-ONLY service account for OpenMetadata (BigQuery Data Viewer,
+# BigQuery Metadata Viewer, BigQuery Job User for profiling), distinct from
+# the pipeline account. Its key file stays outside git; in the UI, the key
+# values are entered in the service form instead.
+#
+# © 2026 Olivier Bouchez · CC BY-NC 4.0 · https://olivier-bouchez.com
+
+source:
+  type: bigquery
+  serviceName: statbel_bigquery
+  serviceConnection:
+    config:
+      type: BigQuery
+      credentials:
+        gcpConfig:
+          path: <path to the read-only service account key, outside git>
+      usageLocation: eu
+  sourceConfig:
+    config:
+      type: DatabaseMetadata
+      markDeletedTables: true
+      includeTables: true
+      includeViews: true
+      includeTags: true
+      overrideMetadata: false
+      schemaFilterPattern:
+        includes:
+          - ^StatBel$               # the dataset of the project only
+      tableFilterPattern:
+        excludes:
+          - ^tutorial_.*
+sink:
+  type: metadata-rest
+  config: {}
+workflowConfig:
+  loggerLevel: INFO
+  openMetadataServerConfig:
+    hostPort: https://<your-openmetadata-host>/api
+    authProvider: openmetadata
+    securityConfig:
+      jwtToken: <ingestion bot JWT, never in git>

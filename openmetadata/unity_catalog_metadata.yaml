@@ -1,0 +1,45 @@
+# OpenMetadata 2.0 - Unity Catalog connector: metadata ingestion (external run)
+#   pip install "openmetadata-ingestion[databricks]"
+#   metadata ingest -c unity_catalog_metadata.yaml
+#
+# Placeholders <...> are filled on YOUR machine only. Never commit a token:
+# prefer creating the service in the OpenMetadata UI (docs/openmetadata.md),
+# where the token is stored encrypted by OpenMetadata.
+#
+# © 2026 Olivier Bouchez · CC BY-NC 4.0 · https://olivier-bouchez.com
+
+source:
+  type: unitycatalog
+  serviceName: statbel_unity_catalog
+  serviceConnection:
+    config:
+      type: UnityCatalog
+      hostPort: <dbc-xxxxxxxx-xxxx.cloud.databricks.com>:443
+      authType:
+        token: <read-only Databricks token, never in git>
+      httpPath: </sql/1.0/warehouses/xxxxxxxxxxxx>
+      catalog: workspace
+      databaseSchema: statbel
+      connectionTimeout: 120
+  sourceConfig:
+    config:
+      type: DatabaseMetadata
+      markDeletedTables: true
+      includeTables: true
+      includeViews: true
+      includeTags: true             # tags of notebook 04_governance_tags
+      includeOwners: false
+      overrideMetadata: false       # keep what stewards edit in OpenMetadata
+      tableFilterPattern:
+        excludes:
+          - ^tutorial_.*            # tutorial tables (notebooks/tutorial)
+sink:
+  type: metadata-rest
+  config: {}
+workflowConfig:
+  loggerLevel: INFO
+  openMetadataServerConfig:
+    hostPort: https://<your-openmetadata-host>/api
+    authProvider: openmetadata
+    securityConfig:
+      jwtToken: <ingestion bot JWT, never in git>

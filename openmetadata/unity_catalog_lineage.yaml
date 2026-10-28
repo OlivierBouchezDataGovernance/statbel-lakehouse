@@ -1,0 +1,35 @@
+# OpenMetadata 2.0 - Unity Catalog connector: lineage (external run)
+#   metadata ingest -c unity_catalog_lineage.yaml
+# Run after the metadata ingestion (same serviceName). Table and column
+# lineage comes from system.access.table_lineage / column_lineage
+# (read rights given by notebook 05_openmetadata_access).
+#
+# © 2026 Olivier Bouchez · CC BY-NC 4.0 · https://olivier-bouchez.com
+
+source:
+  type: unitycatalog-lineage
+  serviceName: statbel_unity_catalog
+  sourceConfig:
+    config:
+      type: DatabaseLineage
+      queryLogDuration: 7
+      parsingTimeoutLimit: 300
+      resultLimit: 1000
+      schemaFilterPattern:
+        includes:
+          - ^statbel$
+      overrideViewLineage: false
+      processViewLineage: true
+      processQueryLineage: true
+      processStoredProcedureLineage: false
+      threads: 1
+sink:
+  type: metadata-rest
+  config: {}
+workflowConfig:
+  loggerLevel: INFO
+  openMetadataServerConfig:
+    hostPort: https://<your-openmetadata-host>/api
+    authProvider: openmetadata
+    securityConfig:
+      jwtToken: <ingestion bot JWT, never in git>

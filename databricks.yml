@@ -36,9 +36,14 @@ resources:
             - task_key: catalog
           notebook_task:
             notebook_path: ./notebooks/02_load_statbel.py
-        - task_key: publish
+        - task_key: tags
           depends_on:
             - task_key: load
+          notebook_task:
+            notebook_path: ./notebooks/04_governance_tags.py
+        - task_key: publish
+          depends_on:
+            - task_key: tags
           notebook_task:
             notebook_path: ./notebooks/03_publish_bigquery.py
       max_concurrent_runs: 1

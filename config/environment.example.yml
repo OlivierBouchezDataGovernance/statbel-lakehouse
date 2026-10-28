@@ -22,6 +22,12 @@ secrets:
   scope: statbel              # Databricks secret scope
   bigquery_key: bigquery-sa-key   # secret holding the service account JSON key
 
+openmetadata:
+  # Databricks identity used by the OpenMetadata Unity Catalog connector:
+  # the application ID of a service principal (recommended) or a user
+  # e-mail. Notebook 05_openmetadata_access grants it READ-ONLY rights.
+  principal: ""
+
 statbel:
   dcat_url: https://doc.statbel.be/publications/DCAT/DCAT_opendata_datasets.ttl
   user_agent: "Mozilla/5.0 (statbel-lakehouse)"

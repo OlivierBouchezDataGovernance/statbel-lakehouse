@@ -1,0 +1,37 @@
+# OpenMetadata 2.0 - BigQuery connector: profiler (external run)
+#   metadata profile -c bigquery_profiler.yaml
+# Run after the metadata ingestion (same serviceName). Profiling scans data:
+# keep the sample small to stay within the BigQuery free tier.
+#
+# © 2026 Olivier Bouchez · CC BY-NC 4.0 · https://olivier-bouchez.com
+
+source:
+  type: bigquery
+  serviceName: statbel_bigquery
+  sourceConfig:
+    config:
+      type: Profiler
+      profileSampleConfig:
+        sampleConfigType: DYNAMIC
+        config:
+          smartSampling: true
+      schemaFilterPattern:
+        includes:
+          - ^StatBel$
+      tableFilterPattern:
+        excludes:
+          - ^tutorial_.*
+          - ^run_report$
+processor:
+  type: orm-profiler
+  config: {}
+sink:
+  type: metadata-rest
+  config: {}
+workflowConfig:
+  loggerLevel: INFO
+  openMetadataServerConfig:
+    hostPort: https://<your-openmetadata-host>/api
+    authProvider: openmetadata
+    securityConfig:
+      jwtToken: <ingestion bot JWT, never in git>

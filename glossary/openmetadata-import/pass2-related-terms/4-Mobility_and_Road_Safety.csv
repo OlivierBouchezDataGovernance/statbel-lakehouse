@@ -1,0 +1,11 @@
+parent,name*,displayName,description,synonyms,relatedTerms,references,tags,reviewers,owner,glossaryStatus,color,iconURL,domains,extension
+Mobility and Road Safety.Road Accident,Accident Location,Accident Location,"Administrative area, and when known the coordinates, where a road accident happened.
+
+**Source columns (Statbel):** CD_PROV_COLLISION, TX_MUNTY_COLLISION_FR, TX_MUNTY_COLLISION_NL, TX_PROV_COLLISION_FR, TX_PROV_COLLISION_NL, TX_REGION_COLLISON_FR, TX_REGION_COLLISON_NL, TX_RGN_COLLISION_FR, TX_RGN_COLLISION_NL",FR: Lieu de l'accident;NL: Plaats van het ongeval,Shared Business Vocabulary.Location.Administrative Area;Shared Business Vocabulary.Location.Geographic Coordinates,,TermType.Role,,,Draft,,,,
+Mobility and Road Safety.Road Accident,Accident Date and Time,Accident Date and Time,"Day, day of the week and hour at which a road accident happened.
+
+**Source columns (Statbel):** CD_DAY_OF_WEEK, DT_DAY, DT_HOUR, DT_MONTH_COLLISION, DT_YEAR_COLLISION, TX_DAY_OF_WEEK_DESCR_FR, TX_DAY_OF_WEEK_DESCR_NL, TX_MONTH_COLLISION_FR, TX_MONTH_COLLISION_NL",FR: Date et heure de l'accident;NL: Datum en tijdstip van het ongeval,Shared Business Vocabulary.Time.Reference Period,,TermType.Characteristic,,,Draft,,,,
+Mobility and Road Safety.Road Casualty,Road Accident Victim,Road Accident Victim,"Person involved in an injury road accident, whether uninjured, injured or killed.",Casualty;FR: Victime;NL: Slachtoffer,Shared Business Vocabulary.Party.Person,Statbel - Road casualties 2023;https://statbel.fgov.be/en/open-data/road-casualties-2023,TermType.BusinessObject,,,Draft,,,,
+Mobility and Road Safety.Road Casualty,Number of Victims,Number of Victims,"Number of persons involved in injury road accidents who share the stated characteristics.
+
+**Source columns (Statbel):** MS_VCT",FR: Nombre de victimes;NL: Aantal slachtoffers,Mobility and Road Safety.Road Casualty.Road Accident Victim,,TermType.Measure,,,Draft,,,,

@@ -104,6 +104,14 @@ for table in ALL_TABLES:
     if table["table"] not in present:
         continue
     for key in table["foreign_keys"]:
+        if key["references"] == table["table"]:
+            # BigQuery refuses a foreign key to the same table: the
+            # hierarchy stays declared in Unity Catalog only.
+            print(f"Skipped {table['table']}.{key['column']}: BigQuery "
+                  "does not support self-referencing foreign keys.")
+            report(table["table"], f"foreign_key_not_declared:"
+                   f"{key['column']}", 1, "self-reference (BigQuery)")
+            continue
         if key["references"] not in present:
             print(f"Skipped {table['table']}.{key['column']}: "
                   f"{key['references']} is not published.")

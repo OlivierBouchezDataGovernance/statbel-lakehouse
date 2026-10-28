@@ -1,0 +1,29 @@
+parent,name*,displayName,description,synonyms,relatedTerms,references,tags,reviewers,owner,glossaryStatus,color,iconURL,domains,extension
+Population and Households.Population,Resident Population,Resident Population,All persons whose main residence is registered in Belgium at the reference date.,Legal Population;FR: Population résidente;NL: Bevolking,Shared Business Vocabulary.Party.Person;Shared Business Vocabulary.Time.Reference Date,,TermType.BusinessObject,,,Draft,,,,
+Population and Households.Population,Population Count,Population Count,"Number of persons in the resident population that share the stated characteristics at the reference date.
+
+**Source columns (Statbel):** MS_POP, MS_POPULATION, MS_POPULATION_20160101, MS_POPULATION_25, MS_POP_IN, MS_TOT_RESIDENTS",Number of Inhabitants;FR: Nombre d'habitants;NL: Aantal inwoners,Population and Households.Population.Resident Population,,TermType.Measure,,,Draft,,,,
+Population and Households.Population,Place of Residence,Place of Residence,"Administrative area where a person has the main residence at the reference date.
+
+**Source columns (Statbel):** CD_REFNIS_LVL_1, CD_REFNIS_LVL_2, CD_REFNIS_LVL_3, CD_REFNIS_LVL_4",FR: Lieu de résidence;NL: Woonplaats,Shared Business Vocabulary.Location.Administrative Area,,TermType.Role,,,Draft,,,,
+Population and Households.Population,Place of Residence One Year Before,Place of Residence One Year Before,"Administrative area or country where a person had the main residence one year before the reference date.
+
+**Source columns (Statbel):** CD_ROY_LVL_1, CD_ROY_LVL_2, CD_ROY_LVL_3, TX_ROY_DESCR_FR_LVL_1, TX_ROY_DESCR_FR_LVL_2, TX_ROY_DESCR_FR_LVL_3, TX_ROY_DESCR_NL_LVL_1, TX_ROY_DESCR_NL_LVL_2, TX_ROY_DESCR_NL_LVL_3",FR: Lieu de résidence un an auparavant;NL: Woonplaats een jaar eerder,Shared Business Vocabulary.Location.Administrative Area;Shared Business Vocabulary.Location.Country,,TermType.Role,,,Draft,,,,
+Population and Households.Population,Place of Birth,Place of Birth,"Country, or administrative area for persons born in Belgium, where a person was born.
+
+**Source columns (Statbel):** CD_POB_LVL_1, CD_POB_LVL_2, CD_POB_LVL_3, CD_POB_LVL_4, TX_POB_DESCR_FR_LVL_1, TX_POB_DESCR_FR_LVL_2, TX_POB_DESCR_FR_LVL_3, TX_POB_DESCR_FR_LVL_4, TX_POB_DESCR_NL_LVL_1, TX_POB_DESCR_NL_LVL_2, TX_POB_DESCR_NL_LVL_3, TX_POB_DESCR_NL_LVL_4",Country of Birth;FR: Lieu de naissance;NL: Geboorteplaats,Shared Business Vocabulary.Location.Country;Shared Business Vocabulary.Location.Administrative Area,,TermType.Role;PersonalData.Personal,,,Draft,,,,
+Population and Households.Household,Family Nucleus,Family Nucleus,"Two or more persons of the same private household who are a couple, with or without children, or a parent with children.
+
+**Source columns (Statbel):** MS_NOYAUX",Family;FR: Noyau familial;NL: Gezinskern,Population and Households.Household.Private Household,,TermType.BusinessObject,,,Draft,,,,
+Population and Households.Household,Housing Arrangement,Housing Arrangement,"Type of living quarters in which a person lives, such as a conventional dwelling or a collective living quarter.
+
+**Source columns (Statbel):** CD_HAR_LVL_1, CD_HAR_LVL_2, CD_HAR_LVL_3, TX_HAR_DESCR_FR_LVL_1, TX_HAR_DESCR_FR_LVL_2, TX_HAR_DESCR_NL_LVL_1, TX_HAR_DESCR_NL_LVL_2",FR: Conditions de logement;NL: Woonsituatie,Buildings and Real Estate.Building Stock.Dwelling,,TermType.Classification,,,Draft,,,,
+Population and Households.Vital Events,Crude Birth Rate,Crude Birth Rate,"Number of live births in a year per 1,000 persons of the average population of that year.",FR: Taux brut de natalité;NL: Bruto geboortecijfer,Population and Households.Vital Events.Birth,Statbel - Crude birth rate;https://statbel.fgov.be/en/open-data/hvd-crude-birth-rate,TermType.Measure,,,Draft,,,,
+Population and Households.Vital Events,Place of Death,Place of Death,Administrative area where a death occurred.,FR: Lieu de décès;NL: Plaats van overlijden,Shared Business Vocabulary.Location.Administrative Area,,TermType.Role,,,Draft,,,,
+Population and Households.Names,Number of Name Bearers,Number of Name Bearers,Number of persons in the resident population who bear a given first name or family name.,Name Frequency;FR: Nombre de porteurs;NL: Aantal naamdragers,Shared Business Vocabulary.Party.Person Name.First Name;Shared Business Vocabulary.Party.Person Name.Family Name,Statbel - Family names;https://statbel.fgov.be/en/open-data/family-names-total-population-municipality,TermType.Measure,,,Draft,,,,
+Population and Households.Labour and Education,Educational Attainment,Educational Attainment,"Highest level of education a person has successfully completed.
+
+**Source columns (Statbel):** CD_EDU, CD_EDU_LVL_1, TX_EDU_DESCR_FR, TX_EDU_DESCR_NL",Highest Level of Education;FR: Niveau d'instruction;NL: Onderwijsniveau,Shared Business Vocabulary.Statistical Classifications.Field of Education,,TermType.Classification,,,Draft,,,,
+Population and Households.Labour and Education,Place of Work,Place of Work,"Administrative area where an employed person carries out the main job.
+
+**Source columns (Statbel):** CD_DSTR_REFNIS_WORK, CD_MUNTY_REFNIS_WORK, CD_PROV_REFNIS_WORK, CD_RGN_REFNIS_WORK, XY_X_LB_72_WORK, XY_Y_LB_72_WORK",FR: Lieu de travail;NL: Plaats van tewerkstelling,Shared Business Vocabulary.Location.Administrative Area,,TermType.Role,,,Draft,,,,

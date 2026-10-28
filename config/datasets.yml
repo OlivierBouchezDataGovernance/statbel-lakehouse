@@ -45,6 +45,25 @@ defaults:
   separator: "|"
   format: zip_text
 
+# Governance tags written in Unity Catalog by notebook 04_governance_tags
+# (OpenMetadata ingests them with "Include Tags"). Domains follow the
+# business domains of guideline DG-GDL-001, not the IT systems.
+governance:
+  domains:                      # table prefix -> business domain (L0)
+    ref: Cross-domain
+    pop: Population and Society
+    eco: Economy
+    mob: Mobility
+    bld: Built Environment
+  table_tags:                   # on every silver table
+    source: statbel
+    licence: cc-by-4.0
+    sensitivity: public
+    layer: silver
+  # Per table: personal_data = none (default) | potential, see each table.
+  # Statbel open data is aggregated (counts published from 5 occurrences):
+  # it holds no data about an identifiable person.
+
 tables:
 
   # --------------------------------------------------------------------------
@@ -116,6 +135,8 @@ tables:
     # (notebook 02 report) before enabling it.
     enabled: false
     domain: ref
+    # An address can identify the household living there (GDPR)
+    personal_data: potential
     title: Belgian addresses with statistical sector and coordinates
     period: "2025-04-01"
     sources:

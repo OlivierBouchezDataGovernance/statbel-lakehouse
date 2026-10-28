@@ -1,0 +1,16 @@
+parent,name*,displayName,description,synonyms,relatedTerms,references,tags,reviewers,owner,glossaryStatus,color,iconURL,domains,extension
+Buildings and Real Estate.Building Stock,Building,Building,"Construction registered as a cadastral parcel with a built part, used for housing or other purposes.
+
+**Source columns (Statbel):** CD_BUILDING_TYPE, MS_BUILDING_NONRES_NEW, MS_BUILDING_NONRES_RENOVATION, MS_BUILDING_RES_NEW, MS_BUILDING_RES_RENOVATION, TF_BUILDING_TYPE_FR, TF_BUILDING_TYPE_NL",FR: Bâtiment;NL: Gebouw,Shared Business Vocabulary.Location.Address,,TermType.BusinessObject,,,Draft,,,,
+Buildings and Real Estate.Building Stock,Dwelling,Dwelling,"Self-contained set of rooms intended for permanent residence by one private household.
+
+**Source columns (Statbel):** MS_DWELLING_RES_NEW, MS_LOGEMENTS",Housing Unit;FR: Logement;NL: Woning,Population and Households.Household.Private Household,,TermType.BusinessObject,,,Draft,,,,
+Buildings and Real Estate.Building Stock,Building Permit,Building Permit,"Authorisation granted by the competent authority to build new or renovate existing buildings.
+
+**Steward note:** Source encodes purpose and type of works in the column names (e.g. MS_BUILDING_RES_NEW).
+
+**Source columns (Statbel):** MS_APARTMENT_RES_NEW, MS_BUILDING_NONRES_NEW, MS_BUILDING_NONRES_RENOVATION, MS_BUILDING_RES_NEW, MS_BUILDING_RES_RENOVATION, MS_DWELLING_RES_NEW, MS_SINGLE_HOUSE_RES_NEW, MS_TOTAL_SURFACE_RES_NEW, MS_VOLUME_NONRES_NEW",FR: Permis de bâtir;NL: Bouwvergunning,Shared Business Vocabulary.Location.Administrative Area;Shared Business Vocabulary.Time.Reference Period,,TermType.BusinessObject,,,Draft,,,,
+Buildings and Real Estate.Real Estate Market,Real Estate Transaction,Real Estate Transaction,"Sale of a property right on a real estate asset, registered by the land registry.",Property Sale;FR: Vente immobilière;NL: Vastgoedverkoop,Shared Business Vocabulary.Location.Administrative Area;Shared Business Vocabulary.Time.Reference Period,,TermType.BusinessObject,,,Draft,,,,
+Buildings and Real Estate.Land,Parcel,Parcel,"Piece of land identified in the land register as a single unit of ownership.
+
+**Source columns (Statbel):** CD_CLASS_SURFACE, MS_TOTAL_SURFACE, MS_TOTAL_SURFACE_RES_NEW",Cadastral Parcel;FR: Parcelle;NL: Perceel,Shared Business Vocabulary.Location.Administrative Area,,TermType.BusinessObject,,,Draft,,,,

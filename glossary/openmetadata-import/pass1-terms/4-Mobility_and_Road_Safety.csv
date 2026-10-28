@@ -1,0 +1,45 @@
+parent,name*,displayName,description,synonyms,relatedTerms,references,tags,reviewers,owner,glossaryStatus,color,iconURL,domains,extension
+,Road Accident,Road Accident,Grouping of the concepts that describe road accidents and their circumstances.,,,,TermType.SubjectArea,,,Draft,,,,
+Mobility and Road Safety.Road Accident,Injury Road Accident,Injury Road Accident,Accident on a public road involving at least one moving vehicle and causing at least one killed or injured person.,Road Accident;Traffic Accident;FR: Accident de la circulation;NL: Verkeersongeval,,Statbel - Road accidents 2023;https://statbel.fgov.be/en/open-data/road-accidents-2023,TermType.BusinessObject,,,Draft,,,,
+Mobility and Road Safety.Road Accident,Accident Location,Accident Location,"Administrative area, and when known the coordinates, where a road accident happened.
+
+**Source columns (Statbel):** CD_PROV_COLLISION, TX_MUNTY_COLLISION_FR, TX_MUNTY_COLLISION_NL, TX_PROV_COLLISION_FR, TX_PROV_COLLISION_NL, TX_REGION_COLLISON_FR, TX_REGION_COLLISON_NL, TX_RGN_COLLISION_FR, TX_RGN_COLLISION_NL",FR: Lieu de l'accident;NL: Plaats van het ongeval,,,TermType.Role,,,Draft,,,,
+Mobility and Road Safety.Road Accident,Accident Date and Time,Accident Date and Time,"Day, day of the week and hour at which a road accident happened.
+
+**Source columns (Statbel):** CD_DAY_OF_WEEK, DT_DAY, DT_HOUR, DT_MONTH_COLLISION, DT_YEAR_COLLISION, TX_DAY_OF_WEEK_DESCR_FR, TX_DAY_OF_WEEK_DESCR_NL, TX_MONTH_COLLISION_FR, TX_MONTH_COLLISION_NL",FR: Date et heure de l'accident;NL: Datum en tijdstip van het ongeval,,,TermType.Characteristic,,,Draft,,,,
+Mobility and Road Safety.Road Accident,Collision Type,Collision Type,"Classification of a road accident by the way the parties collided, such as head-on, rear-end or with a pedestrian.
+
+**Source columns (Statbel):** CD_COLLISION_TYPE, CD_COLL_TYPE, TX_COLLISION_TYPE_NL, TX_COLLISON_TYPE_FR, TX_COLLISON_TYPE_NL, TX_COLL_TYPE_DESCR_FR, TX_COLL_TYPE_DESCR_NL",FR: Type de collision;NL: Type aanrijding,,,TermType.Classification,,,Draft,,,,
+Mobility and Road Safety.Road Accident,Road Type,Road Type,"Classification of the public road on which an accident happened, such as motorway or local road.
+
+**Source columns (Statbel):** CD_ROAD_TYPE, CD_ROAD_TYPE_FR, CD_ROAD_TYPE_NL, TX_ROAD_TYPE_DESCR_FR, TX_ROAD_TYPE_DESCR_NL, TX_ROAD_TYPE_FR, TX_ROAD_TYPE_NL",FR: Type de route;NL: Wegtype,,,TermType.Classification,,,Draft,,,,
+Mobility and Road Safety.Road Accident,Light Condition,Light Condition,"Classification of the lighting at the time of an accident: daylight, dawn or dusk, night with or without lighting.
+
+**Source columns (Statbel):** CD_LIGHT_COND, CD_LIGHT_CONDITION, TX_LIGHT_CONDITION_FR, TX_LIGHT_CONDITION_NL, TX_LIGHT_COND_DESCR_FR, TX_LIGHT_COND_DESCR_NL",FR: Luminosité;NL: Lichtgesteldheid,,,TermType.Classification,,,Draft,,,,
+Mobility and Road Safety.Road Accident,Road Condition,Road Condition,"Classification of the road surface at the time of an accident, such as dry, wet or icy.
+
+**Source columns (Statbel):** CD_ROAD_CONDITION, TX_ROAD_CONDITION_FR, TX_ROAD_CONDITION_NL",FR: État de la route;NL: Toestand van het wegdek,,,TermType.Classification,,,Draft,,,,
+Mobility and Road Safety.Road Accident,Built-up Area Indicator,Built-up Area Indicator,"Indication of whether an accident happened inside or outside a built-up area.
+
+**Source columns (Statbel):** CD_BUILD_UP_AREA, TX_BUILD_UP_AREA_DESCR_FR, TX_BUILD_UP_AREA_DESCR_NL, TX_BUILD_UP_AREA_FR, TX_BUILD_UP_AREA_NL",FR: Agglomération;NL: Bebouwde kom,,,TermType.Classification,,,Draft,,,,
+,Road Casualty,Road Casualty,Grouping of the concepts that describe the persons involved in road accidents.,,,,TermType.SubjectArea,,,Draft,,,,
+Mobility and Road Safety.Road Casualty,Road Accident Victim,Road Accident Victim,"Person involved in an injury road accident, whether uninjured, injured or killed.",Casualty;FR: Victime;NL: Slachtoffer,,Statbel - Road casualties 2023;https://statbel.fgov.be/en/open-data/road-casualties-2023,TermType.BusinessObject,,,Draft,,,,
+Mobility and Road Safety.Road Casualty,Injury Severity,Injury Severity,"Classification of a victim by the seriousness of injuries: uninjured, slightly injured, seriously injured, mortally injured, killed on the spot or within 30 days.
+
+**Steward note:** Spread over 6 measure columns in the source; one classification in the business model.
+
+**Source columns (Statbel):** MS_ACCT_WITH_MORY_INJ, MS_ACCT_WITH_SERLY_INJ, MS_ACCT_WITH_SLY_INJ, MS_DEAD, MS_DEAD_30_DAYS, MS_MORY_INJ, MS_SERLY_INJ, MS_SLY_INJ, MS_VIC_OK",FR: Gravité des blessures;NL: Ernst van de letsels,,,TermType.Classification,,,Draft,,,,
+Mobility and Road Safety.Road Casualty,Number of Victims,Number of Victims,"Number of persons involved in injury road accidents who share the stated characteristics.
+
+**Source columns (Statbel):** MS_VCT",FR: Nombre de victimes;NL: Aantal slachtoffers,,,TermType.Measure,,,Draft,,,,
+Mobility and Road Safety.Road Casualty,Victim Type,Victim Type,"Role of a victim in the accident: driver, passenger or other person such as a pedestrian.
+
+**Source columns (Statbel):** CD_VCT_TYPE, TX_VCT_TYPE_DESCR_FR, TX_VCT_TYPE_DESCR_NL",FR: Type de victime;NL: Type slachtoffer,,,TermType.Classification,,,Draft,,,,
+Mobility and Road Safety.Road Casualty,Road User Type,Road User Type,"Means of travel of a road user at the time of the accident, such as car, bicycle or on foot.
+
+**Source columns (Statbel):** CD_ROAD_USR_TYPE, CD_ROAD_USR_TYPE1, CD_ROAD_USR_TYPE2, TX_ROAD_USR_TYPE1_FR, TX_ROAD_USR_TYPE1_NL, TX_ROAD_USR_TYPE2_FR, TX_ROAD_USR_TYPE2_NL, TX_ROAD_USR_TYPE_DESCR_FR, TX_ROAD_USR_TYPE_DESCR_NL",FR: Type d'usager;NL: Type weggebruiker,,,TermType.Classification,,,Draft,,,,
+,Vehicle,Vehicle,Grouping of the concepts that describe the vehicles involved in road accidents.,,,,TermType.SubjectArea,,,Draft,,,,
+Mobility and Road Safety.Vehicle,Vehicle Type,Vehicle Type,"Classification of a vehicle by its construction and use, such as passenger car, lorry or motorcycle.",FR: Type de véhicule;NL: Voertuigtype,,,TermType.Classification,,,Draft,,,,
+Mobility and Road Safety.Vehicle,Vehicle Age,Vehicle Age,"Number of full years between the first registration of a vehicle and the date of the accident.
+
+**Source columns (Statbel):** MS_VEHICLE_AGE_AT_COLLISION_YR, TX_CLASS_VEHICLE_AGE_AT_COLL_YR",FR: Âge du véhicule;NL: Leeftijd van het voertuig,,,TermType.Characteristic,,,Draft,,,,

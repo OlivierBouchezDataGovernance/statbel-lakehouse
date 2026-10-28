@@ -1,0 +1,45 @@
+parent,name*,displayName,description,synonyms,relatedTerms,references,tags,reviewers,owner,glossaryStatus,color,iconURL,domains,extension
+,Enterprise,Enterprise,Grouping of the concepts that describe enterprises active in Belgium.,,,,TermType.SubjectArea,,,Draft,,,,
+Enterprises and Economy.Enterprise,VAT-Registered Enterprise,VAT-Registered Enterprise,Natural or legal person registered as liable for value added tax in Belgium.,VAT Payer;FR: Entreprise assujettie à la TVA;NL: Btw-plichtige onderneming,,,TermType.BusinessObject,,,Draft,,,,
+Enterprises and Economy.Enterprise,Independent Entrepreneur,Independent Entrepreneur,"Natural person who carries out a professional activity on own account, without an employment contract.
+
+**Steward note:** Not a new kind of party: a Person in the role of self-employed operator of a business.",Self-Employed Person;FR: Indépendant;NL: Zelfstandige,,,TermType.Role;PersonalData.Personal,,,Draft,,,,
+Enterprises and Economy.Enterprise,Main Economic Activity,Main Economic Activity,"Economic activity that contributes most to the value added of an enterprise.
+
+**Source columns (Statbel):** CD_NACE, CD_NACEBEL2008, CD_NACE_LVL1, CD_NACE_LVL2, CD_NACE_REV2_CLASS, DESCR_NACE1_FR, DESCR_NACE1_NL, DESCR_NACE2_FR, DESCR_NACE2_NL, NACE1, NACE2, TX_NACEBEL2008_DESCR_DE …",Principal Activity;FR: Activité principale;NL: Hoofdactiviteit,,,TermType.Role,,,Draft,,,,
+Enterprises and Economy.Enterprise,Registered Office Location,Registered Office Location,"Administrative area of the registered office of an enterprise.
+
+**Source columns (Statbel):** CD_REGION",Head Office Location;FR: Siège social;NL: Maatschappelijke zetel,,,TermType.Role,,,Draft,,,,
+Enterprises and Economy.Enterprise,Employer Size Class,Employer Size Class,"Classification of enterprises by the number of employees they declare.
+
+**Source columns (Statbel):** CD_EMPLOYMENT_CLASS, TX_EMPLOYMENT_CLASS_DESCR_FR, TX_EMPLOYMENT_CLASS_DESCR_NL",Employee Size Class;FR: Classe de travailleurs;NL: Werknemersklasse,,,TermType.Classification,,,Draft,,,,
+,Enterprise Demography,Enterprise Demography,Grouping of the concepts that describe how the population of enterprises changes over a period.,,,,TermType.SubjectArea,,,Draft,,,,
+Enterprises and Economy.Enterprise Demography,Active Enterprises at Start of Period,Active Enterprises at Start of Period,"Number of VAT-registered enterprises active on the first day of the reference period.
+
+**Source columns (Statbel):** REGISTRATIONS_BOP",Stock at Beginning of Period;FR: Assujettis en début de période,,,TermType.Measure,,,Draft,,,,
+Enterprises and Economy.Enterprise Demography,First Registrations,First Registrations,"Number of enterprises registered for VAT for the first time during the reference period.
+
+**Source columns (Statbel):** FIRST_REGISTRATIONS, MS_CNT_FIRST_REGISTRATIONS",Births of Enterprises;FR: Primo-assujettissements;NL: Eerste aanmeldingen,,,TermType.Measure,,,Draft,,,,
+Enterprises and Economy.Enterprise Demography,Re-registrations,Re-registrations,"Number of enterprises registered again for VAT during the reference period after an earlier deregistration.
+
+**Source columns (Statbel):** RE_REGISTRATIONS",FR: Ré-assujettissements;NL: Heraanmeldingen,,,TermType.Measure,,,Draft,,,,
+Enterprises and Economy.Enterprise Demography,Deregistrations,Deregistrations,"Number of enterprises whose VAT registration ended during the reference period.
+
+**Source columns (Statbel):** DEREGISTRATIONS",Closures;FR: Radiations;NL: Schrappingen,,,TermType.Measure,,,Draft,,,,
+Enterprises and Economy.Enterprise Demography,Enterprise Inflows,Enterprise Inflows,"Number of enterprises that entered an activity, region or sector during the reference period without a new registration.
+
+**Source columns (Statbel):** IMMIGRATIONS",FR: Immigrations;NL: Immigraties,,,TermType.Measure,,,Draft,,,,
+Enterprises and Economy.Enterprise Demography,Enterprise Outflows,Enterprise Outflows,"Number of enterprises that left an activity, region or sector during the reference period without a deregistration.
+
+**Source columns (Statbel):** EMIGRATIONS",FR: Émigrations;NL: Emigraties,,,TermType.Measure,,,Draft,,,,
+,Prices,Prices,Grouping of the concepts that describe the change in prices paid by households.,,,,TermType.SubjectArea,,,Draft,,,,
+Enterprises and Economy.Prices,Consumer Price Index,Consumer Price Index,"Index that measures the change over time in the prices of a fixed basket of goods and services bought by households.
+
+**Source columns (Statbel):** MS_CPI_IDX, MS_CPI_INFL, MS_WT_CPI",CPI;FR: Indice des prix à la consommation;NL: Consumptieprijsindex,,Statbel - Consumer price index and health index;https://statbel.fgov.be/en/open-data/consumer-price-index-and-health-index,TermType.Measure,,,Draft,,,,
+Enterprises and Economy.Prices,Health Index,Health Index,"Consumer price index from which alcohol, tobacco and motor fuels are excluded, used in Belgium to index wages and social benefits.",FR: Indice santé;NL: Gezondheidsindex,,Statbel - Consumer price index and health index;https://statbel.fgov.be/en/open-data/consumer-price-index-and-health-index,TermType.Measure,,,Draft,,,,
+Enterprises and Economy.Prices,Harmonised Index of Consumer Prices,Harmonised Index of Consumer Prices,"Consumer price index computed with a method common to all EU member states.
+
+**Source columns (Statbel):** MS_HICP_IDX, MS_HICP_IDX_CT, MS_IDX_HICP, MS_IDX_HICP_CT, MS_INFL_HICP, MS_INFL_HICP_CT, MS_WT_HICP",HICP;FR: IPCH;NL: GICP,,,TermType.Measure,,,Draft,,,,
+Enterprises and Economy.Prices,Inflation Rate,Inflation Rate,"Percentage change of the consumer price index compared with the same period of the previous year.
+
+**Source columns (Statbel):** MS_CPI_INFL, MS_INFL_HICP, MS_INFL_HICP_CT",FR: Taux d'inflation;NL: Inflatie,,,TermType.Measure,,,Draft,,,,

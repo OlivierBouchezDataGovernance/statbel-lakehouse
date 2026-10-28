@@ -1,0 +1,41 @@
+parent,name*,displayName,description,synonyms,relatedTerms,references,tags,reviewers,owner,glossaryStatus,color,iconURL,domains,extension
+,Building Stock,Building Stock,Grouping of the concepts that describe the buildings and dwellings registered in the land register.,,,,TermType.SubjectArea,,,Draft,,,,
+Buildings and Real Estate.Building Stock,Building,Building,"Construction registered as a cadastral parcel with a built part, used for housing or other purposes.
+
+**Source columns (Statbel):** CD_BUILDING_TYPE, MS_BUILDING_NONRES_NEW, MS_BUILDING_NONRES_RENOVATION, MS_BUILDING_RES_NEW, MS_BUILDING_RES_RENOVATION, TF_BUILDING_TYPE_FR, TF_BUILDING_TYPE_NL",FR: Bâtiment;NL: Gebouw,,,TermType.BusinessObject,,,Draft,,,,
+Buildings and Real Estate.Building Stock,Building Type,Building Type,"Classification of buildings by construction and use, such as terraced house, detached house or apartment building.
+
+**Source columns (Statbel):** CD_BUILDING_TYPE, CD_TOB_LVL_1, CD_TOB_LVL_2, TF_BUILDING_TYPE_FR, TF_BUILDING_TYPE_NL, TX_TOB_DESCR_FR_LVL_1, TX_TOB_DESCR_FR_LVL_2, TX_TOB_DESCR_NL_LVL_1, TX_TOB_DESCR_NL_LVL_2",FR: Type de bâtiment;NL: Type gebouw,,,TermType.Classification,,,Draft,,,,
+Buildings and Real Estate.Building Stock,Period of Construction,Period of Construction,"Period in which the construction of a building was completed.
+
+**Source columns (Statbel):** CD_POC, CD_POC_LVL_1, TX_POC_DESCR_FR, TX_POC_DESCR_NL",Construction Period;FR: Époque de construction;NL: Bouwperiode,,,TermType.Classification,,,Draft,,,,
+Buildings and Real Estate.Building Stock,Dwelling,Dwelling,"Self-contained set of rooms intended for permanent residence by one private household.
+
+**Source columns (Statbel):** MS_DWELLING_RES_NEW, MS_LOGEMENTS",Housing Unit;FR: Logement;NL: Woning,,,TermType.BusinessObject,,,Draft,,,,
+Buildings and Real Estate.Building Stock,Number of Buildings,Number of Buildings,"Number of buildings that share the stated characteristics at the reference date.
+
+**Source columns (Statbel):** MS_BUILDING_NONRES_NEW, MS_BUILDING_NONRES_RENOVATION, MS_BUILDING_RES_NEW, MS_BUILDING_RES_RENOVATION",FR: Nombre de bâtiments;NL: Aantal gebouwen,,,TermType.Measure,,,Draft,,,,
+Buildings and Real Estate.Building Stock,Building Permit,Building Permit,"Authorisation granted by the competent authority to build new or renovate existing buildings.
+
+**Steward note:** Source encodes purpose and type of works in the column names (e.g. MS_BUILDING_RES_NEW).
+
+**Source columns (Statbel):** MS_APARTMENT_RES_NEW, MS_BUILDING_NONRES_NEW, MS_BUILDING_NONRES_RENOVATION, MS_BUILDING_RES_NEW, MS_BUILDING_RES_RENOVATION, MS_DWELLING_RES_NEW, MS_SINGLE_HOUSE_RES_NEW, MS_TOTAL_SURFACE_RES_NEW, MS_VOLUME_NONRES_NEW",FR: Permis de bâtir;NL: Bouwvergunning,,,TermType.BusinessObject,,,Draft,,,,
+,Real Estate Market,Real Estate Market,Grouping of the concepts that describe sales of real estate.,,,,TermType.SubjectArea,,,Draft,,,,
+Buildings and Real Estate.Real Estate Market,Real Estate Transaction,Real Estate Transaction,"Sale of a property right on a real estate asset, registered by the land registry.",Property Sale;FR: Vente immobilière;NL: Vastgoedverkoop,,,TermType.BusinessObject,,,Draft,,,,
+Buildings and Real Estate.Real Estate Market,Real Estate Type,Real Estate Type,"Classification of a property sold, such as house, apartment, villa or building land.
+
+**Source columns (Statbel):** CD_TYPE, CD_TYPE_FR, CD_TYPE_NL",Nature of the Property;FR: Type de bien;NL: Type vastgoed,,,TermType.Classification,,,Draft,,,,
+Buildings and Real Estate.Real Estate Market,Number of Transactions,Number of Transactions,"Number of real estate transactions that share the stated characteristics during the reference period.
+
+**Source columns (Statbel):** MS_TOTAL_TRANSACTIONS",FR: Nombre de transactions;NL: Aantal transacties,,,TermType.Measure,,,Draft,,,,
+Buildings and Real Estate.Real Estate Market,Transaction Price,Transaction Price,"Price paid for a real estate transaction, published as total, mean or percentile, in euro or in euro per square metre for land.
+
+**Source columns (Statbel):** MS_MEAN_PRICE, MS_P10, MS_P25, MS_P50, MS_P75, MS_P90, MS_TOTAL_PRICE",Sale Price;FR: Prix de vente;NL: Verkoopprijs,,,TermType.Measure,,,Draft,,,,
+,Land,Land,Grouping of the concepts that describe land parcels and land cover.,,,,TermType.SubjectArea,,,Draft,,,,
+Buildings and Real Estate.Land,Parcel,Parcel,"Piece of land identified in the land register as a single unit of ownership.
+
+**Source columns (Statbel):** CD_CLASS_SURFACE, MS_TOTAL_SURFACE, MS_TOTAL_SURFACE_RES_NEW",Cadastral Parcel;FR: Parcelle;NL: Perceel,,,TermType.BusinessObject,,,Draft,,,,
+Buildings and Real Estate.Land,Parcel Surface Class,Parcel Surface Class,"Classification of parcels by their area in square metres.
+
+**Source columns (Statbel):** CD_CLASS_SURFACE",FR: Classe de superficie;NL: Oppervlakteklasse,,,TermType.Classification,,,Draft,,,,
+Buildings and Real Estate.Land,Land Cover,Land Cover,"Classification of the surface of a parcel by what covers it, such as built-up land, agricultural land or forest.",Land Use;FR: Occupation du sol;NL: Bodembezetting,,Statbel - Land cover;https://statbel.fgov.be/en/open-data/land-cover-according-land-register,TermType.Classification,,,Draft,,,,

@@ -66,8 +66,11 @@ dbutils.widgets.text("secret_key", "bigquery-sa-key", "Secret key name")
 dbutils.widgets.text("max_table_size_gb", "1", "Max BigQuery table size (GB)")
 
 local_file = os.path.join(find_project_root(), "config", "environment.yml")
+extra_sections = {}  # other sections of the local file, kept as they are
 if os.path.exists(local_file):
     local = load_yaml(local_file)
+    extra_sections = {key: local[key] for key in
+                      ("openmetadata", "statbel", "licence") if key in local}
     settings = {
         "gcp_project_id": local["bigquery"]["project_id"],
         "bq_dataset": local["bigquery"].get("dataset", "StatBel"),
@@ -136,6 +139,7 @@ template = load_yaml(
     os.path.join(find_project_root(), "config", "environment.example.yml"))
 environment = {
     **template,
+    **extra_sections,
     "databricks": {"catalog": CATALOG, "schema": SCHEMA},
     "bigquery": {
         "project_id": settings["gcp_project_id"],

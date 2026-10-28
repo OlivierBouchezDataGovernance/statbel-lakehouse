@@ -45,7 +45,15 @@ flowchart LR
 | Catalog | `01_statbel_catalog` | Statbel DCAT catalog → `meta_dataset`, `meta_distribution`, `meta_document`, `meta_field` (4,000+ field descriptions read from ~200 Excel dictionaries with ~50 layouts) |
 | Load | `02_load_statbel` | landing → bronze → silver for the tables enabled in [`config/datasets.yml`](config/datasets.yml), quality checks, Unity Catalog documentation and keys |
 | Publish | `03_publish_bigquery` | silver → BigQuery: data, descriptions, labels, primary and foreign keys, `GEOGRAPHY`, run report |
+| Tag | `04_governance_tags` | Unity Catalog tags: business domain, personal data, licence, representation of each column |
+| Catalog access | `05_openmetadata_access` | read-only rights for the OpenMetadata Unity Catalog connector ([docs/openmetadata.md](docs/openmetadata.md)) |
+| Answer key | `06_training_answer_key` | trainer only: each silver column ↔ suggested business term of the [glossary](glossary/README.md) (64 % of the columns), written outside git and outside the catalog |
 | Learn | `tutorial/01-03` | the same method, step by step, by hand, for two tables |
+
+The **business glossary** (5 glossaries, 127 terms, OpenMetadata 2.0 import
+files) is in [`glossary/`](glossary/README.md). OpenMetadata harvests both
+**Databricks** (Unity Catalog connector: tables, tags, column lineage) and
+**BigQuery**; participants then link columns to terms — the exercise.
 
 ## Data governance, built in
 
@@ -107,9 +115,12 @@ config/
   datasets.yml               the Statbel tables to load and how (in git)
   environment.example.yml    template of your settings (the real file is
                              written by 00_setup in a Databricks volume)
+glossary/   business glossary: OpenMetadata 2.0 import files (2 passes)
+openmetadata/  connector configurations (placeholders, no secrets)
 notebooks/
   00_setup  01_statbel_catalog  02_load_statbel  03_publish_bigquery
-  lib/      config · common · dictionary · transform · bigquery
+  04_governance_tags  05_openmetadata_access  06_training_answer_key
+  lib/      config · common · dictionary · transform · bigquery · governance
   tutorial/ 01_ref_municipality · 02_publish_ref_municipality · 03_ref_first_name
 docs/       install, Databricks Free Edition, configuration, architecture,
             data model, data quality findings, source inspection

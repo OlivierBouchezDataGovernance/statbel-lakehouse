@@ -1,0 +1,120 @@
+parent,name*,displayName,description,synonyms,relatedTerms,references,tags,reviewers,owner,glossaryStatus,color,iconURL,domains,extension
+,Party,Party,"Grouping of the concepts that describe anyone, a natural person or an organisation, about whom information is recorded.",Stakeholder,,,TermType.SubjectArea,,,Draft,,,,
+Shared Business Vocabulary.Party,Person,Person,"A human being considered as an individual who has rights and obligations; the business-to-consumer side of a party.
+
+**Steward note:** Unit counted in most population statistics.",Natural Person;Individual;FR: Personne physique;NL: Natuurlijke persoon,,,TermType.BusinessObject;PersonalData.Personal,,,Draft,,,,
+Shared Business Vocabulary.Party.Person,Sex,Sex,"Biological classification of a person as male or female, as recorded in the population register.
+
+**Steward note:** 9 different column names in the source for one concept.
+
+**Source columns (Statbel):** CD_GENDER, CD_SEX, CD_SEX_LVL_1, MS_SEX_, TX_GENDER_DESCR_EN, TX_GENDER_DESCR_FR, TX_GENDER_DESCR_NL, TX_SEX_DESCR_FR, TX_SEX_DESCR_NL",Gender;FR: Sexe;NL: Geslacht,,,TermType.Characteristic;PersonalData.Personal,,,Draft,,,,
+Shared Business Vocabulary.Party.Person,Age,Age,"Number of full years a person has lived at the reference date.
+
+**Source columns (Statbel):** CD_AGE, TX_AGE_DESCR_FR, TX_AGE_DESCR_NL",FR: Âge;NL: Leeftijd,,,TermType.Characteristic;PersonalData.Personal,,,Draft,,,,
+Shared Business Vocabulary.Party.Person,Age Group,Age Group,"Grouping of ages into contiguous ranges used to publish statistics.
+
+**Source columns (Statbel):** CD_AGE_CLS, CD_AGE_LVL_2, CD_AGE_LVL_3, TX_AGE_CLS_DESCR_FR, TX_AGE_CLS_DESCR_NL",Age Class;FR: Classe d'âge;NL: Leeftijdsgroep,,,TermType.Classification,,,Draft,,,,
+Shared Business Vocabulary.Party.Person,Marital Status,Marital Status,"Legal situation of a person with respect to marriage: single, married, widowed or divorced.
+
+**Source columns (Statbel):** CD_LMS, CD_LMS_LVL_1, CD_LMS_LVL_2, TX_LMS_DESCR_FR, TX_LMS_DESCR_FR_LVL_1, TX_LMS_DESCR_FR_LVL_2, TX_LMS_DESCR_NL, TX_LMS_DESCR_NL_LVL_1, TX_LMS_DESCR_NL_LVL_2",Civil Status;Legal Marital Status;FR: État civil;NL: Burgerlijke staat,,,TermType.Characteristic;PersonalData.Personal,,,Draft,,,,
+Shared Business Vocabulary.Party.Person,Citizenship,Citizenship,"Country whose nationality a person legally holds at the reference date.
+
+**Steward note:** A characteristic of Person whose values come from Country.
+
+**Source columns (Statbel):** CD_COC_LVL_1, CD_COC_LVL_2, CD_COC_LVL_3, CD_COC_LVL_4, CD_NATLTY, TX_COC_DESCR_FR_LVL_1, TX_COC_DESCR_FR_LVL_2, TX_COC_DESCR_FR_LVL_3, TX_COC_DESCR_FR_LVL_4, TX_COC_DESCR_NL_LVL_1, TX_COC_DESCR_NL_LVL_2, TX_COC_DESCR_NL_LVL_3 …",Nationality;Country of Citizenship;FR: Nationalité;NL: Nationaliteit,,,TermType.Characteristic;PersonalData.Personal,,,Draft,,,,
+Shared Business Vocabulary.Party,Person Name,Person Name,"Words by which a person is known and identified, made of one or more first names and a family name.
+
+**Steward note:** Anticipated shared term: reused by any business-to-consumer domain.",Personal Name;FR: Nom de personne;NL: Persoonsnaam,,Statbel - Family names;https://statbel.fgov.be/en/open-data/family-names-total-population-municipality,TermType.BusinessObject;PersonalData.Personal,,,Draft,,,,
+Shared Business Vocabulary.Party.Person Name,First Name,First Name,"Name given to a person at birth or later, used to distinguish the person from members of the same family.",Given Name;Forename;FR: Prénom;NL: Voornaam,,,TermType.Characteristic;PersonalData.Personal,,,Draft,,,,
+Shared Business Vocabulary.Party.Person Name,Family Name,Family Name,Name shared by members of a family and passed on by descent or by law.,Surname;Last Name;FR: Nom de famille;NL: Familienaam,,Statbel - Family names;https://statbel.fgov.be/en/open-data/family-names-total-population-municipality,TermType.Characteristic;PersonalData.Personal,,,Draft,,,,
+Shared Business Vocabulary.Party,Organisation,Organisation,"A legal person or other body set up to pursue an activity, recognised as a party distinct from the people who compose it.
+
+**Steward note:** The business-to-business side of a party.",Legal Person;Legal Entity;FR: Personne morale;NL: Rechtspersoon,,,TermType.BusinessObject,,,Draft,,,,
+Shared Business Vocabulary.Party.Organisation,Legal Form,Legal Form,"Legal structure under which an organisation is constituted, such as a public limited company or a non-profit association.
+
+**Source columns (Statbel):** CD_LEGAL_FORM, TX_LEGAL_FORM_DESCR_FR, TX_LEGAL_FORM_DESCR_NL",Juridical Form;FR: Forme juridique;NL: Rechtsvorm,,,TermType.Classification,,,Draft,,,,
+Shared Business Vocabulary.Party.Organisation,Enterprise Number,Enterprise Number,"Unique number given by the Crossroads Bank for Enterprises to every registered enterprise in Belgium.
+
+**Steward note:** Not present in the open data (anonymised) but anticipated: it is the key to align with any other B2B domain.",KBO Number;BCE Number;Company Number;FR: Numéro d'entreprise;NL: Ondernemingsnummer,,,TermType.Identifier,,,Draft,,,,
+Shared Business Vocabulary.Party,Party Type,Party Type,"Classification of a party as a natural person or a legal person.
+
+**Steward note:** The B2C / B2B split; source column names it 'type of enterprise'.
+
+**Source columns (Statbel):** TYPE_ENT_FR, TYPE_ENT_NL",Enterprise Type;Person Type;FR: Type de personne;NL: Persoonstype,,,TermType.Classification,,,Draft,,,,
+Shared Business Vocabulary.Party,Party Relationship,Party Relationship,"Link between two parties in which one party plays a defined role towards the other, such as employment, ownership or directorship.
+
+**Steward note:** Holds who works for, owns or manages whom; the reason Party is modelled once.",Party Role;FR: Relation entre parties;NL: Relatie tussen partijen,,,TermType.BusinessObject,,,Draft,,,,
+Shared Business Vocabulary.Party.Party Relationship,Party Relationship Type,Party Relationship Type,"Classification of the role one party plays towards another: employee, owner or shareholder, director or administrator, or self-employed operator of its own business.
+
+**Steward note:** Statbel publishes jobs (employment relationships) as counts, e.g. MS_EMPL_TOT.
+
+**Source columns (Statbel):** MS_EMPL_EMP_F, MS_EMPL_EMP_M, MS_EMPL_EMP_TOT, MS_EMPL_F, MS_EMPL_FCT_F, MS_EMPL_FCT_M, MS_EMPL_FCT_TOT, MS_EMPL_M, MS_EMPL_OUV_F, MS_EMPL_OUV_M, MS_EMPL_OUV_TOT, MS_EMPL_TOT",Role Type;FR: Type de relation;NL: Type relatie,,,TermType.Classification,,,Draft,,,,
+,Location,Location,"Grouping of the concepts that describe where something is, happens or is registered.",Geography;Place,,,TermType.SubjectArea,,,Draft,,,,
+Shared Business Vocabulary.Location,Address,Address,"Structured information that identifies a physical or postal location at which a party resides, operates or receives mail.
+
+**Steward note:** Defined in DG-STD-001 section 7; reused here, not redefined.",Postal Address;FR: Adresse;NL: Adres,,Statbel - Address file with statistical sector;https://statbel.fgov.be/en/open-data/address-file-statistical-sector-0,TermType.BusinessObject;PersonalData.Personal,,,Draft,,,,
+Shared Business Vocabulary.Location.Address,Street,Street,"Public road identified by an official name and code within a municipality.
+
+**Source columns (Statbel):** CD_STR, TX_STR_NM_DE, TX_STR_NM_FR, TX_STR_NM_NL",FR: Rue;NL: Straat,,,TermType.BusinessObject,,,Draft,,,,
+Shared Business Vocabulary.Location.Address,House Number,House Number,"Number, with optional suffix, given to a building or plot along a street.
+
+**Source columns (Statbel):** FL_EVEN, TX_HO_NR",FR: Numéro de police;NL: Huisnummer,,,TermType.Characteristic,,,Draft,,,,
+Shared Business Vocabulary.Location.Address,Postal Code,Postal Code,"Code of the postal delivery area to which an address belongs.
+
+**Source columns (Statbel):** CD_ZIP",Post Code;ZIP Code;FR: Code postal;NL: Postcode,,,TermType.Characteristic,,,Draft,,,,
+Shared Business Vocabulary.Location,Geographic Coordinates,Geographic Coordinates,"Pair of values that positions a location on the earth's surface in a stated reference system.
+
+**Source columns (Statbel):** MS_X_COORD, MS_Y_COORD, XY_LAT_WGS84, XY_LON_WGS84, XY_X_3035, XY_X_3812, XY_X_LB72, XY_X_LB_72_RESIDENCE, XY_X_LB_72_WORK, XY_Y_3035, XY_Y_3812, XY_Y_LB72 …",XY;Geocode;Latitude and Longitude,,,TermType.Characteristic,,,Draft,,,,
+Shared Business Vocabulary.Location,Administrative Area,Administrative Area,"Part of the Belgian territory with defined boundaries, used for administration or statistics and identified by a REFNIS code.
+
+**Steward note:** 117 column names in the source refer to these areas.
+
+**Source columns (Statbel):** CD_DSTR_REFNIS, CD_DSTR_REFNIS_RESIDENCE, CD_DSTR_REFNIS_WORK, CD_MUNTY_REFNIS, CD_MUNTY_REFNIS_RESIDENCE, CD_MUNTY_REFNIS_WORK, CD_NIVEAU_REFNIS, CD_PROV_REFNIS, CD_PROV_REFNIS_RESIDENCE, CD_PROV_REFNIS_WORK, CD_REFNIS, CD_REFNIS_DISTRICT …",Geographic Entity;REFNIS Area;FR: Entité administrative;NL: Administratieve eenheid,,Statbel - Code REFNIS;https://statbel.fgov.be/en/open-data/code-refnis-0,TermType.BusinessObject,,,Draft,,,,
+Shared Business Vocabulary.Location.Administrative Area,Region,Region,"One of the three federated regions of Belgium: Brussels-Capital, Flemish and Walloon.
+
+**Source columns (Statbel):** CD_REFNIS_LVL_1, CD_REGION, CD_RGN_REFNIS, CD_RGN_REFNIS_RESIDENCE, CD_RGN_REFNIS_WORK, TX_REGION_COLLISON_FR, TX_REGION_COLLISON_NL, TX_REGION_DESCR_FR, TX_REGION_DESCR_NL, TX_RGN_COLLISION_FR, TX_RGN_COLLISION_NL, TX_RGN_DESCR_DE …",FR: Région;NL: Gewest,,,TermType.BusinessObject,,,Draft,,,,
+Shared Business Vocabulary.Location.Administrative Area,Province,Province,"Administrative subdivision of a region, of which Belgium counts ten.
+
+**Source columns (Statbel):** CD_PROV, CD_PROV_COLLISION, CD_PROV_REFNIS, CD_PROV_REFNIS_RESIDENCE, CD_PROV_REFNIS_WORK, CD_REFNIS_LVL_2, CD_REFNIS_PROVINCE, PROVINCE BRABANT WALLON, PROVINCE HAINAUT, PROVINCE LIEGE, PROVINCE LUXEMBOURG, PROVINCE NAMUR …",FR: Province;NL: Provincie,,,TermType.BusinessObject,,,Draft,,,,
+Shared Business Vocabulary.Location.Administrative Area,Administrative District,Administrative District,"Administrative subdivision of a province grouping several municipalities.
+
+**Source columns (Statbel):** CD_DSTR_REFNIS, CD_DSTR_REFNIS_RESIDENCE, CD_DSTR_REFNIS_WORK, CD_REFNIS_LVL_3, TX_ADM_DSTR_DESCR_DE, TX_ADM_DSTR_DESCR_EN, TX_ADM_DSTR_DESCR_FR, TX_ADM_DSTR_DESCR_NL, TX_ADM_DSTR_RESIDENCE_DESCR_FR, TX_ADM_DSTR_RESIDENCE_DESCR_NL, TX_ADM_DSTR_WORK_DESCR_FR, TX_ADM_DSTR_WORK_DESCR_NL",Arrondissement;FR: Arrondissement;NL: Arrondissement,,,TermType.BusinessObject,,,Draft,,,,
+Shared Business Vocabulary.Location.Administrative Area,Municipality,Municipality,"Lowest level of local government, of which Belgium counts 565 since 2025.
+
+**Source columns (Statbel):** CD_MUNTY_REFNIS, CD_MUNTY_REFNIS_RESIDENCE, CD_MUNTY_REFNIS_WORK, CD_REFNIS_LVL_4, CD_REFNIS_MUNICIPALITY, CD_SUB_MUNTY, MS_NBR_MUNICIP_TAXES, MS_TOT_MUNICIP_TAXES, TX_MUNTY_COLLISION_FR, TX_MUNTY_COLLISION_NL, TX_MUNTY_DESCR_DE, TX_MUNTY_DESCR_EN …",Commune;FR: Commune;NL: Gemeente,,,TermType.BusinessObject,,,Draft,,,,
+Shared Business Vocabulary.Location.Administrative Area,Statistical Sector,Statistical Sector,"Smallest territorial unit defined by Statbel inside a municipality for statistical publication.
+
+**Source columns (Statbel):** CD_SECTOR, CD_SECTOR_2023, DT_STOP_SECTOR, DT_STRT_SECTOR, TX_DESCR_SECTOR_FR, TX_DESCR_SECTOR_NL, TX_SECTOR_DESCR_DE, TX_SECTOR_DESCR_FR, TX_SECTOR_DESCR_NL",FR: Secteur statistique;NL: Statistische sector,,Statbel - Statistical sectors 2024;https://statbel.fgov.be/en/open-data/statistical-sectors-2024,TermType.BusinessObject,,,Draft,,,,
+Shared Business Vocabulary.Location.Administrative Area,REFNIS Code,REFNIS Code,"Code that identifies an administrative area in the national REFNIS nomenclature maintained by Statbel.
+
+**Source columns (Statbel):** CD_DSTR_REFNIS, CD_DSTR_REFNIS_RESIDENCE, CD_DSTR_REFNIS_WORK, CD_MUNTY_REFNIS, CD_MUNTY_REFNIS_RESIDENCE, CD_MUNTY_REFNIS_WORK, CD_NIVEAU_REFNIS, CD_PROV_REFNIS, CD_PROV_REFNIS_RESIDENCE, CD_PROV_REFNIS_WORK, CD_REFNIS, CD_REFNIS_DISTRICT …",NIS Code;FR: Code INS;NL: NIS-code,,Statbel - Code REFNIS;https://statbel.fgov.be/en/open-data/code-refnis-0,TermType.Identifier,,,Draft,,,,
+Shared Business Vocabulary.Location,NUTS Region,NUTS Region,"Territorial unit of the European Nomenclature of Territorial Units for Statistics.
+
+**Source columns (Statbel):** CD_NUTS, CD_NUTS1, CD_NUTS2, CD_NUTS3, CD_NUTS_LEVEL, CD_NUTS_LVL2, CD_NUTS_LVL3, NUTS1_2021, NUTS2_2021, NUTS3_2021, TX_NUTS_DESCR_DE, TX_NUTS_DESCR_EN …",FR: Région NUTS;NL: NUTS-regio,,Statbel - NUTS codes;https://statbel.fgov.be/en/open-data/nuts-codes-2027,TermType.Classification,,,Draft,,,,
+Shared Business Vocabulary.Location,Country,Country,"Sovereign state or territory identified by an ISO 3166-1 code.
+
+**Source columns (Statbel):** CD_COC_LVL_1, CD_COC_LVL_2, CD_COC_LVL_3, CD_COC_LVL_4, CD_COUNTRY, CD_POB_LVL_1, CD_POB_LVL_2, CD_POB_LVL_3, CD_POB_LVL_4, C_COUNTRY, TX_COC_DESCR_FR_LVL_1, TX_COC_DESCR_FR_LVL_2 …",FR: Pays;NL: Land,,ISO 3166 Country codes;https://www.iso.org/iso-3166-country-codes.html,TermType.BusinessObject,,,Draft,,,,
+Shared Business Vocabulary.Location,Grid Cell,Grid Cell,"Square of fixed size in a European reference grid used to publish statistics independently of administrative boundaries.
+
+**Source columns (Statbel):** GRD_NEWID",Km² Grid Cell;FR: Cellule de grille;NL: Rastercel,,,TermType.BusinessObject,,,Draft,,,,
+,Time,Time,Grouping of the concepts that position facts and statistics in time.,Calendar,,,TermType.SubjectArea,,,Draft,,,,
+Shared Business Vocabulary.Time,Reference Period,Reference Period,"Period of time, such as a year, quarter, month or day, to which a statistic or a fact refers.
+
+**Source columns (Statbel):** CD_MONTH, CD_PERIOD, CD_YEAR, DT_DATE, DT_DAY, DT_MONTH_COLLISION, DT_YEAR_COLLISION, MONTH, NM_YR, YEAR",Period;FR: Période de référence;NL: Referentieperiode,,,TermType.Characteristic,,,Draft,,,,
+Shared Business Vocabulary.Time,Reference Date,Reference Date,"Calendar day at which a stock, such as a population or a building stock, is measured.
+
+**Source columns (Statbel):** DT_DATE",Snapshot Date;FR: Date de référence;NL: Referentiedatum,,,TermType.Characteristic,,,Draft,,,,
+Shared Business Vocabulary.Time,Validity Period,Validity Period,"Start and end dates between which a code, area or record is valid.
+
+**Source columns (Statbel):** DT_STOP_SECTOR, DT_STRT_SECTOR, DT_VLDT_STOP, DT_VLDT_STRT",Valid From - Valid To;FR: Période de validité;NL: Geldigheidsperiode,,,TermType.Characteristic,,,Draft,,,,
+,Statistical Classifications,Statistical Classifications,"Grouping of the official classifications used to code activities, occupations, education and products.",Nomenclatures;Code Lists,,,TermType.SubjectArea,,,Draft,,,,
+Shared Business Vocabulary.Statistical Classifications,Economic Activity,Economic Activity,"Kind of production in which a unit is engaged, coded in the NACE-BEL classification.
+
+**Source columns (Statbel):** CD_IND, CD_IND_LVL_1, CD_IND_LVL_2, CD_IND_NM_DE, CD_IND_NM_EN, CD_IND_NM_FR, CD_IND_NM_NL, CD_IND_VAL_DE, CD_IND_VAL_EN, CD_IND_VAL_FR, CD_IND_VAL_NL, CD_NACE …",Activity Sector;NACE Code;FR: Activité économique;NL: Economische activiteit,,Statbel - NACE-BEL 2008;https://statbel.fgov.be/en/open-data/nace-bel-2008-classification,TermType.Classification,,,Draft,,,,
+Shared Business Vocabulary.Statistical Classifications,Occupation,Occupation,"Kind of work performed in a job, coded in the ISCO-08 classification.",Profession;FR: Profession;NL: Beroep,,Statbel - ISCO-2008;https://statbel.fgov.be/en/open-data/isco-2008-classification-4-digits,TermType.Classification,,,Draft,,,,
+Shared Business Vocabulary.Statistical Classifications,Field of Education,Field of Education,"Subject domain of an education programme or qualification, coded in ISCED-F 2013.
+
+**Source columns (Statbel):** CD_ISCED_2011, CD_ISCED_CL, TX_ISCED_2011_DESCR_DE, TX_ISCED_2011_DESCR_EN, TX_ISCED_2011_DESCR_FR, TX_ISCED_2011_DESCR_NL",FR: Domaine d'études;NL: Studiegebied,,Statbel - ISCED-F 2013;https://statbel.fgov.be/en/open-data/code-isced-f-2013-4-digits,TermType.Classification,,,Draft,,,,
+Shared Business Vocabulary.Statistical Classifications,Product Category,Product Category,"Group of goods or services in a product classification such as CPA, PRODCOM or COICOP.
+
+**Source columns (Statbel):** CD_COICOP, NM_CD_COICOP_LVL, TX_COICOP_EN_LVL1, TX_COICOP_EN_LVL2, TX_COICOP_EN_LVL3, TX_COICOP_EN_LVL4, TX_COICOP_FR_LVL1, TX_COICOP_FR_LVL2, TX_COICOP_FR_LVL3, TX_COICOP_FR_LVL4, TX_COICOP_NL_LVL1, TX_COICOP_NL_LVL2 …",Product Group;FR: Groupe de produits;NL: Productgroep,,,TermType.Classification,,,Draft,,,,
