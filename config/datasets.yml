@@ -1,0 +1,382 @@
+# Statbel datasets loaded by the pipeline (one entry per BigQuery table).
+#
+# Turn a table on or off with `enabled`. Notebooks 02 and 03 process the
+# enabled tables (or the list given in their `tables` widget).
+#
+# Keys of a table (all optional except table, domain, period, sources):
+#   table            BigQuery / silver table name (domain prefix: ref_, pop_,
+#                    eco_, mob_, bld_)
+#   enabled          true / false
+#   title            short English title (the DCAT title is added when found)
+#   period           reference date or period: column REF_PERIOD, label period
+#   sources          one or more files; the rows of all sources are stacked
+#     url            download URL
+#     format         zip_text (zip with one delimited text file, default)
+#                    or zip_geojson (zip with one GeoJSON file)
+#     separator      field separator of text files (default "|")
+#     constants      columns added to every row of this source
+#   rename           {sanitised source name: new name}, for invalid names
+#   types            {column: string|int|bigint|double|date|boolean}
+#                    overrides the default rule by prefix (see below)
+#   filter           SQL condition on the raw text values (before typing)
+#   keep_latest      keep only the rows of the highest value of this column
+#   dictionary       URL of the Statbel field dictionary (Excel), read by
+#                    notebook 01 into meta_field
+#   dictionary_aliases {column: name used in the dictionary}
+#   column_descriptions {column: text}: manual descriptions (win over the
+#                    dictionary; used when Statbel publishes none)
+#   primary_key      natural key, declared only if it is unique and not NULL
+#   foreign_keys     [{column, references, referenced_column}]
+#   geography        geojson: <column>  (GeoJSON in EPSG:3812, reprojected)
+#                    or point: {longitude: <column>, latitude: <column>}
+#
+# Default typing rule by column prefix (Statbel naming convention):
+#   CD_ code, TX_ label -> string (codes keep their leading zeros)
+#   MS_ measure        -> bigint, or double if decimals are found
+#   DT_ date           -> date (dd/MM/yyyy or yyyy-MM-dd)
+#   FL_ flag           -> boolean
+#   LVL_ level         -> int
+#   XY_ coordinate     -> double
+#   anything else      -> string
+#
+# Column names are upper-cased; characters outside A-Z, 0-9 and _ become _.
+
+defaults:
+  separator: "|"
+  format: zip_text
+
+tables:
+
+  # --------------------------------------------------------------------------
+  # Reference data
+  # --------------------------------------------------------------------------
+  - table: ref_municipality
+    enabled: true
+    domain: ref
+    title: Belgian administrative units (REFNIS hierarchy)
+    period: "2025-01-01"
+    sources:
+      - url: https://statbel.fgov.be/sites/default/files/files/opendata/REFNIS%20code/TU_COM_REFNIS-20250101.zip
+    # Decision 2026-10-28: only the units valid today (CD_REFNIS is unique)
+    filter: "DT_VLDT_END = '31/12/9999'"
+    column_descriptions:
+      CD_REFNIS: REFNIS code of the administrative unit
+      CD_SUP_REFNIS: REFNIS code of the parent unit (NULL for regions)
+      LVL_REFNIS: "Level: 1 region, 2 province, 3 district, 4 municipality"
+      TX_REFNIS_FR: Name of the administrative unit in French
+      TX_REFNIS_NL: Name of the administrative unit in Dutch
+      TX_REFNIS_DE: Name of the administrative unit in German
+      DT_VLDT_START: First day of validity of the unit
+      DT_VLDT_END: "Last day of validity of the unit (9999-12-31: still valid)"
+    primary_key: [CD_REFNIS]
+    foreign_keys:
+      - {column: CD_SUP_REFNIS, references: ref_municipality, referenced_column: CD_REFNIS}
+
+  - table: ref_nuts_lau
+    enabled: true
+    domain: ref
+    title: Correspondence REFNIS - NUTS - LAU (European regions)
+    period: "2025-01-01"
+    sources:
+      - url: https://statbel.fgov.be/sites/default/files/files/opendata/Nuts/TU_COM_NUTS_LAU-20250101.zip
+    # The file holds the history (merged municipalities): current rows only
+    filter: "DT_VLDT_STOP = '31/12/9999'"
+    dictionary: https://statbel.fgov.be/sites/default/files/files/opendata/Nuts/Columns%20description_NUTS_2025.xlsx
+    primary_key: [CD_LAU]
+    foreign_keys:
+      - {column: CD_MUNTY_REFNIS, references: ref_municipality, referenced_column: CD_REFNIS}
+
+  - table: ref_statistical_sector
+    enabled: true
+    domain: ref
+    title: Statistical sectors (neighbourhoods) with their geometry
+    period: "2026-01-01"
+    sources:
+      - url: https://statbel.fgov.be/sites/default/files/files/opendata/Statistische%20sectoren/sh_statbel_statistical_sectors_3812_20260101.geojson.zip
+        format: zip_geojson
+    dictionary: https://statbel.fgov.be/sites/default/files/files/opendata/Statistische%20sectoren/Columns%20description_2026.xlsx
+    dictionary_aliases:
+      CD_NUTS_LVL1: CD_NUTS1
+      CD_NUTS_LVL2: CD_NUTS2
+      CD_NUTS_LVL3: CD_NUTS3
+    column_descriptions:
+      GEOMETRY: Sector boundary (reprojected from Belgian Lambert 2008 EPSG:3812 to WGS 84)
+      OBJECTID: Technical identifier of the feature in the GeoJSON file
+      CD_QUARTER: Code of the quarter (group of sectors) of the municipality
+      DT_SITUATION: Date of the situation described by the file
+      TX_MUNTY_DSTR: Name of the municipal district, if any (Antwerp)
+    primary_key: [CD_SECTOR]
+    foreign_keys:
+      - {column: CD_MUNTY_REFNIS, references: ref_municipality, referenced_column: CD_REFNIS}
+    geography:
+      geojson: GEOMETRY
+
+  - table: ref_address
+    # Large table (865 MB of text, about 1 GB in BigQuery): check the size
+    # (notebook 02 report) before enabling it.
+    enabled: false
+    domain: ref
+    title: Belgian addresses with statistical sector and coordinates
+    period: "2025-04-01"
+    sources:
+      - url: https://doc.statbel.fgov.be/publications/OpenData/TF_RGN_ADDRESSES_STAT_SECTORS_20250401.txt.zip
+    dictionary: https://statbel.fgov.be/sites/default/files/files/opendata/RGN_ADDRESSES/VAR_RGN_ADDRESSES_STAT_SECTORS.xlsx
+    dictionary_aliases:
+      CD_SECTOR_2024: CD_SECTOR_2023
+    primary_key: [CD_REFNIS, CD_STR, TX_HO_NR]
+    foreign_keys:
+      - {column: CD_REFNIS, references: ref_municipality, referenced_column: CD_REFNIS}
+      - {column: CD_SECTOR_2024, references: ref_statistical_sector, referenced_column: CD_SECTOR}
+    geography:
+      point: {longitude: XY_LON_WGS84, latitude: XY_LAT_WGS84}
+
+  - table: ref_nace_bel
+    enabled: true
+    domain: ref
+    title: Economic activity classification Nace-Bel 2008 (5 levels)
+    period: "2008"
+    sources:
+      - url: https://statbel.fgov.be/sites/default/files/files/opendata/Code%20Nace-Bel%202008/TU_COM_NACEBEL_2008.zip
+    column_descriptions:
+      LVL_NACEBEL: "Level: 1 section, 2 division, 3 group, 4 class, 5 subclass"
+      CD_NACEBEL: Nace-Bel 2008 code (without dots)
+      CD_SUP_NACEBEL: Nace-Bel code of the parent level (NULL for sections)
+      TX_NACEBEL_DE: Label in German
+      TX_NACEBEL_EN: Label in English
+      TX_NACEBEL_FR: Label in French
+      TX_NACEBEL_NL: Label in Dutch
+      DT_VLDT_START: First day of validity of the code
+      DT_VLDT_END: "Last day of validity of the code (9999-12-31: still valid)"
+    primary_key: [CD_NACEBEL]
+    foreign_keys:
+      - {column: CD_SUP_NACEBEL, references: ref_nace_bel, referenced_column: CD_NACEBEL}
+
+  - table: ref_country
+    # Not Statbel open data: EU Vocabularies authority table "Country"
+    # (Publications Office of the EU, CC BY 4.0). The URL of the current
+    # CSV distribution must be confirmed before enabling this table.
+    enabled: false
+    domain: ref
+    title: Countries and territories (EU authority table)
+    period: to-confirm
+    sources:
+      - url: TO-CONFIRM
+    primary_key: [CD_COUNTRY]
+
+  - table: ref_first_name
+    enabled: true
+    domain: ref
+    title: First names by municipality and sex
+    period: "2026-01-01"
+    sources:
+      - url: https://statbel.fgov.be/sites/default/files/files/opendata/Voornamen%20bevolking%20per%20gemeente/TA_POP_FEMALE_2026.zip
+        constants: {CD_SEX: F}
+      - url: https://statbel.fgov.be/sites/default/files/files/opendata/Voornamen%20bevolking%20per%20gemeente/TA_POP_MALE_2026.zip
+        constants: {CD_SEX: M}
+    column_descriptions:
+      CD_REFNIS: REFNIS code of the municipality
+      TX_DESCR_NL: Municipality name in Dutch
+      TX_DESCR_FR: Municipality name in French
+      TX_FST_NAME: First name
+      MS_FREQUENCY: Number of residents of the municipality with this first name and sex
+      CD_SEX: "Sex: F female, M male (derived from the source file name)"
+    primary_key: [CD_REFNIS, CD_SEX, TX_FST_NAME]
+    foreign_keys:
+      - {column: CD_REFNIS, references: ref_municipality, referenced_column: CD_REFNIS}
+
+  - table: ref_family_name
+    enabled: true
+    domain: ref
+    title: Family names by municipality
+    period: "2026-01-01"
+    sources:
+      - url: https://statbel.fgov.be/sites/default/files/files/opendata/Familienamen/TA_POP_LST_2026.zip
+    column_descriptions:
+      CD_REFNIS: REFNIS code of the municipality
+      TX_DESCR_NL: Municipality name in Dutch
+      TX_DESCR_FR: Municipality name in French
+      TX_LST_NAMES: Family name
+      MS_FREQUENCY: Number of residents of the municipality with this family name (published from 5 occurrences)
+    primary_key: [CD_REFNIS, TX_LST_NAMES]
+    foreign_keys:
+      - {column: CD_REFNIS, references: ref_municipality, referenced_column: CD_REFNIS}
+
+  # --------------------------------------------------------------------------
+  # Persons and population
+  # --------------------------------------------------------------------------
+  - table: pop_structure
+    enabled: true
+    domain: pop
+    title: Population by municipality, nationality, marital status, age and sex
+    period: "2026-01-01"
+    sources:
+      - url: https://statbel.fgov.be/sites/default/files/files/opendata/bevolking%20naar%20woonplaats%2C%20nationaliteit%20burgelijke%20staat%20%2C%20leeftijd%20en%20geslacht/TF_SOC_POP_STRUCT_2026.zip
+    dictionary: https://statbel.fgov.be/sites/default/files/files/opendata/bevolking%20naar%20woonplaats%2C%20nationaliteit%20burgelijke%20staat%20%2C%20leeftijd%20en%20geslacht/Columns%20description.xlsx
+    dictionary_aliases:
+      CD_REFNIS: CD_MUNTY_REFNIS
+      TX_DESCR_NL: TX_MUNTY_DESCR_NL
+      TX_DESCR_FR: TX_MUNTY_DESCR_FR
+    primary_key: [CD_REFNIS, CD_SEX, CD_NATLTY, CD_CIV_STS, CD_AGE]
+    foreign_keys:
+      - {column: CD_REFNIS, references: ref_municipality, referenced_column: CD_REFNIS}
+      - {column: CD_NATLTY, references: ref_country, referenced_column: CD_COUNTRY}
+
+  - table: pop_by_sector
+    enabled: true
+    domain: pop
+    title: Population by statistical sector
+    period: "2025-01-01"
+    sources:
+      - url: https://statbel.fgov.be/sites/default/files/files/opendata/bevolking/sectoren/OPENDATA_SECTOREN_2025_NEW.zip
+    rename:
+      OPPERVLAKKTE_IN_HM: MS_TOT_SUR     # "OPPERVLAKKTE IN HM²": invalid name
+    types:
+      TOTAL: bigint
+    dictionary: https://statbel.fgov.be/sites/default/files/files/opendata/bevolking/sectoren/Columns%20description2020.xlsx
+    dictionary_aliases:
+      TOTAL: POPULATION
+    primary_key: [CD_SECTOR]
+    foreign_keys:
+      - {column: CD_SECTOR, references: ref_statistical_sector, referenced_column: CD_SECTOR}
+      - {column: CD_REFNIS, references: ref_municipality, referenced_column: CD_REFNIS}
+
+  - table: pop_income_by_sector
+    enabled: true
+    domain: pop
+    title: Fiscal income by statistical sector (multi-year file)
+    period: 2005-2023
+    sources:
+      - url: https://statbel.fgov.be/sites/default/files/files/opendata/arbeid%20per%20sector/TF_PSNL_INC_TAX_SECTOR.zip
+    dictionary: https://statbel.fgov.be/sites/default/files/files/opendata/arbeid%20per%20sector/fiscales_variables_vers2.xlsx
+    # Not in the Statbel dictionary; "." in the file = not available
+    column_descriptions:
+      CD_MUNTY_REFNIS: REFNIS code of the municipality (code valid in the income year)
+      CD_SECTOR: Code of the statistical sector (code valid in the income year)
+      MS_AVG_TOT_NET_TAXABLE_INC: Average total net taxable income per declaration, in euro
+      MS_MEDIAN_NET_TAXABLE_INC: Median total net taxable income per declaration, in euro
+      MS_INT_QUART_DIFF: Interquartile difference of the total net taxable income, in euro
+      MS_INT_QUART_COEFF: Interquartile coefficient of the total net taxable income
+      MS_INT_QUART_ASSYM: Interquartile asymmetry of the total net taxable income
+      TX_SECTOR_DESCR_NL: Name of the statistical sector in Dutch
+      TX_SECTOR_DESCR_FR: Name of the statistical sector in French
+    primary_key: [CD_YEAR, CD_SECTOR]
+    foreign_keys:
+      - {column: CD_SECTOR, references: ref_statistical_sector, referenced_column: CD_SECTOR}
+      - {column: CD_MUNTY_REFNIS, references: ref_municipality, referenced_column: CD_REFNIS}
+
+  # --------------------------------------------------------------------------
+  # Enterprises
+  # --------------------------------------------------------------------------
+  - table: eco_vat_enterprise
+    enabled: true
+    domain: eco
+    title: Enterprises subject to VAT by municipality, Nace-Bel activity and legal form
+    period: "2024"
+    sources:
+      - url: https://statbel.fgov.be/sites/default/files/files/opendata/btw-plichtige/rechtsvorm/TF_VAT_NACE_2024.zip
+    # Statbel documents this file in a PDF only: descriptions written here
+    column_descriptions:
+      CD_LGL_PSN_VAT: Legal form of the VAT-liable entity (code)
+      CD_NACE: Nace-Bel 2008 activity (subclass code, 5 digits)
+      CD_MUNTY_REFNIS: REFNIS code of the municipality ('-----' = abroad)
+      CD_ADM_DSTR_REFNIS: REFNIS code of the administrative district
+      CD_PROV_REFNIS: REFNIS code of the province
+      CD_RGN_REFNIS: REFNIS code of the region
+      MS_NUM_VAT: Number of VAT-liable enterprises
+      MS_NUM_VAT_START: Number of VAT-liable enterprises started during the year
+      MS_NUM_VAT_STOP: Number of VAT-liable enterprises stopped during the year
+      TX_LGL_PSN_VAT_FR_LVL1: Legal form of the VAT-liable entity, label in French
+      TX_LGL_PSN_VAT_NL_LVL1: Legal form of the VAT-liable entity, label in Dutch
+      TX_LGL_PSN_VAT_EN_LVL1: Legal form of the VAT-liable entity, label in English
+      TX_NACE_FR_LVL1: Nace-Bel 2008 section (level 1) of the activity, code and label in French
+      TX_NACE_NL_LVL1: Nace-Bel 2008 section (level 1) of the activity, code and label in Dutch
+      TX_NACE_EN_LVL1: Nace-Bel 2008 section (level 1) of the activity, code and label in English
+      TX_NACE_FR_LVL2: Nace-Bel 2008 division (level 2) of the activity, code and label in French
+      TX_NACE_NL_LVL2: Nace-Bel 2008 division (level 2) of the activity, code and label in Dutch
+      TX_NACE_EN_LVL2: Nace-Bel 2008 division (level 2) of the activity, code and label in English
+      TX_NACE_FR_LVL3: Nace-Bel 2008 group (level 3) of the activity, code and label in French
+      TX_NACE_NL_LVL3: Nace-Bel 2008 group (level 3) of the activity, code and label in Dutch
+      TX_NACE_EN_LVL3: Nace-Bel 2008 group (level 3) of the activity, code and label in English
+      TX_NACE_FR_LVL4: Nace-Bel 2008 class (level 4) of the activity, code and label in French
+      TX_NACE_NL_LVL4: Nace-Bel 2008 class (level 4) of the activity, code and label in Dutch
+      TX_NACE_EN_LVL4: Nace-Bel 2008 class (level 4) of the activity, code and label in English
+      TX_NACE_FR_LVL5: Nace-Bel 2008 subclass (level 5) of the activity, code and label in French
+      TX_NACE_NL_LVL5: Nace-Bel 2008 subclass (level 5) of the activity, code and label in Dutch
+      TX_NACE_EN_LVL5: Nace-Bel 2008 subclass (level 5) of the activity, code and label in English
+      TX_MUNTY_DESCR_FR: Name of the municipality in French
+      TX_MUNTY_DESCR_NL: Name of the municipality in Dutch
+      TX_MUNTY_DESCR_EN: Name of the municipality in English
+      TX_ADM_DSTR_DESCR_FR: Name of the administrative district in French
+      TX_ADM_DSTR_DESCR_NL: Name of the administrative district in Dutch
+      TX_ADM_DSTR_DESCR_EN: Name of the administrative district in English
+      TX_PROV_DESCR_FR: Name of the province in French
+      TX_PROV_DESCR_NL: Name of the province in Dutch
+      TX_PROV_DESCR_EN: Name of the province in English
+      TX_RGN_DESCR_FR: Name of the region in French
+      TX_RGN_DESCR_NL: Name of the region in Dutch
+      TX_RGN_DESCR_EN: Name of the region in English
+    primary_key: [CD_LGL_PSN_VAT, CD_NACE, CD_MUNTY_REFNIS]
+    foreign_keys:
+      - {column: CD_MUNTY_REFNIS, references: ref_municipality, referenced_column: CD_REFNIS}
+      - {column: CD_NACE, references: ref_nace_bel, referenced_column: CD_NACEBEL}
+
+  - table: eco_bankruptcy
+    enabled: true
+    domain: eco
+    title: Monthly bankruptcies by Nace-Bel activity and municipality (multi-year file)
+    period: multi-year
+    sources:
+      - url: https://statbel.fgov.be/sites/default/files/files/opendata/BRI_Nace/TF_BANKRUPTCIES.zip
+    dictionary: https://statbel.fgov.be/sites/default/files/files/opendata/BRI_Nace/Method_BANKRUPTCIES.xlsx
+    column_descriptions:
+      CD_YEAR: Year of the bankruptcy
+      CD_MONTH: Month of the bankruptcy (1-12)
+    # Candidate key: declared only if the quality check finds it unique
+    primary_key: [CD_YEAR, CD_MONTH, CD_EMPLOYMENT_CLASS, CD_LEGAL_FORM,
+                  CD_MUNTY_REFNIS, CD_NACE_REV2_CLASS, CD_COMPANY_DURATION]
+    foreign_keys:
+      - {column: CD_MUNTY_REFNIS, references: ref_municipality, referenced_column: CD_REFNIS}
+      - {column: CD_NACE_REV2_CLASS, references: ref_nace_bel, referenced_column: CD_NACEBEL}
+
+  # --------------------------------------------------------------------------
+  # Mobility
+  # --------------------------------------------------------------------------
+  - table: mob_road_accident
+    enabled: true
+    domain: mob
+    title: Road accidents with casualties, by date, place and circumstances
+    period: "2025"
+    sources:
+      - url: https://statbel.fgov.be/sites/default/files/files/opendata/Verkeersongevallen/TF_ACCIDENTS_2025.zip
+    types:
+      DT_HOUR: int                     # an hour of the day, not a date
+    dictionary: https://statbel.fgov.be/sites/default/files/files/opendata/Verkeersongevallen/TF_ACCIDENTS.xlsx
+    # Candidate key: declared only if the quality check finds it unique
+    primary_key: [DT_DAY, DT_HOUR, CD_BUILD_UP_AREA, CD_COLL_TYPE,
+                  CD_LIGHT_COND, CD_ROAD_TYPE, CD_MUNTY_REFNIS]
+    foreign_keys:
+      - {column: CD_MUNTY_REFNIS, references: ref_municipality, referenced_column: CD_REFNIS}
+
+  # --------------------------------------------------------------------------
+  # Built environment
+  # --------------------------------------------------------------------------
+  - table: bld_building_stock
+    enabled: true
+    domain: bld
+    title: Cadastral building stock by administrative unit and building type
+    period: "2025"
+    sources:
+      - url: https://statbel.fgov.be/sites/default/files/files/opendata/Buildstock/building_stock_open_data_2025.zip
+    # The 2025 edition holds the series 1995-2025: latest year only
+    keep_latest: CD_YEAR
+    dictionary: https://statbel.fgov.be/sites/default/files/files/opendata/Buildstock/TF_Building_stock_metadata%20variables.xlsx
+    dictionary_aliases:
+      CD_REFNIS_NL: TF_REFNIS_NL
+      CD_REFNIS_FR: TF_REFNIS_FR
+      CD_STAT_TYPE_NL: TF_STAT_TYPE_NL
+      CD_STAT_TYPE_FR: TF_STAT_TYPE_FR
+      CD_BUILDING_TYPE_NL: TF_BUILDING_TYPE_NL
+      CD_BUILDING_TYPE_FR: TF_BUILDING_TYPE_FR
+    primary_key: [CD_YEAR, CD_REFNIS, CD_STAT_TYPE, CD_BUILDING_TYPE]
+    foreign_keys:
+      - {column: CD_REFNIS, references: ref_municipality, referenced_column: CD_REFNIS}

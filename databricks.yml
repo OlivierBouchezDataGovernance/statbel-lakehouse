@@ -1,0 +1,49 @@
+# Databricks Asset Bundle: the pipeline as a job (optional).
+#
+#   databricks bundle validate
+#   databricks bundle deploy
+#   databricks bundle run statbel_pipeline
+#
+# The workspace host comes from your Databricks CLI profile. Run
+# notebooks/00_setup once before: it writes your settings in the config volume.
+# Tasks run on serverless compute (the only compute of Databricks Free Edition).
+#
+# © 2026 Olivier Bouchez · CC BY-NC 4.0 · https://olivier-bouchez.com
+
+bundle:
+  name: statbel-lakehouse
+
+resources:
+  jobs:
+    statbel_pipeline:
+      name: statbel-pipeline
+      description: >-
+        Statbel open data: catalog metadata, landing -> bronze -> silver,
+        publication to BigQuery with descriptions, keys and run report.
+      parameters:
+        - name: catalog
+          default: workspace
+        - name: schema
+          default: statbel
+        - name: tables
+          default: enabled
+      tasks:
+        - task_key: catalog
+          notebook_task:
+            notebook_path: ./notebooks/01_statbel_catalog.py
+        - task_key: load
+          depends_on:
+            - task_key: catalog
+          notebook_task:
+            notebook_path: ./notebooks/02_load_statbel.py
+        - task_key: publish
+          depends_on:
+            - task_key: load
+          notebook_task:
+            notebook_path: ./notebooks/03_publish_bigquery.py
+      max_concurrent_runs: 1
+
+targets:
+  dev:
+    mode: development
+    default: true

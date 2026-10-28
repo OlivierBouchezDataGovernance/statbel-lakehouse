@@ -1,0 +1,32 @@
+# Environment of the Statbel lakehouse pipeline: TEMPLATE.
+#
+# Do not fill this file in git. Run notebooks/00_setup in Databricks: it asks
+# for these values (widgets) and writes the real file into the Unity Catalog
+# volume /Volumes/<catalog>/<schema>/config/environment.yml, outside git.
+#
+# No secret is stored here: the BigQuery service account key lives in a
+# Databricks secret scope, referenced by its name only.
+
+databricks:
+  catalog: workspace          # Unity Catalog catalog ("workspace" on Free Edition)
+  schema: statbel             # schema holding the volumes and the Delta tables
+
+bigquery:
+  project_id: my-gcp-project  # Google Cloud project ID
+  dataset: StatBel            # BigQuery dataset (must already exist)
+  location: EU                # dataset location
+  max_table_size_gb: 1.0      # tables larger than this are not published
+                              # unless allow_large=true (free tier safety)
+
+secrets:
+  scope: statbel              # Databricks secret scope
+  bigquery_key: bigquery-sa-key   # secret holding the service account JSON key
+
+statbel:
+  dcat_url: https://doc.statbel.be/publications/DCAT/DCAT_opendata_datasets.ttl
+  user_agent: "Mozilla/5.0 (statbel-lakehouse)"
+
+licence:
+  data_line: >-
+    Source: Statbel open data (statbel.fgov.be/fr/open-data), CC BY 4.0.
+    Transformed by Olivier Bouchez · Data Consulting.

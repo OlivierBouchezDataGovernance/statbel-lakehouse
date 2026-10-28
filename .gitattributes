@@ -1,0 +1,2 @@
+# Same line endings everywhere (Windows, macOS, Databricks Git folders)
+* text=auto eol=lf

@@ -1,0 +1,33 @@
+# ---------------------------------------------------------------------------
+# Never commit secrets or personal settings (this repository is public)
+# ---------------------------------------------------------------------------
+# Service account keys and any other JSON credential files
+*.json
+# Environment files, certificates, private keys
+.env
+.env.*
+*.pem
+*.key
+*.p12
+# Personal configuration: the real environment lives in the Databricks
+# config volume (written by notebooks/00_setup), never in git
+config/environment.yml
+# Personal notes, project brief and local Claude Code settings
+private/
+CLAUDE.md
+.claude/
+# Databricks CLI / bundle state
+.databricks/
+
+# ---------------------------------------------------------------------------
+# Python and local tooling
+# ---------------------------------------------------------------------------
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+.venv/
+
+# Local data and downloads (the sources live in the Databricks volume)
+data/
+downloads/
