@@ -108,6 +108,19 @@ To change the configuration (for example enable `ref_address`), use your own
 **fork**: edit `config/datasets.yml` in the Git folder, then commit and push
 from the same dialog.
 
+Good to know about the Git folder:
+
+- After a `%pip install`, Databricks writes the **notebook environment** at
+  the top of the notebook (`# /// script … [tool.databricks.environment]`).
+  The notebooks then appear as *modified*. Do not commit these headers:
+  **Discard** them before a **Pull**.
+- To **push** from Databricks, link GitHub in **Settings › Linked accounts ›
+  Git integration** and give the Databricks GitHub App access to the
+  repository. If GitHub still rejects the push ("Remote ref update was
+  rejected"), the commit probably uses an e-mail that your GitHub privacy
+  settings keep private (**GitHub › Settings › Emails**, "Block command line
+  pushes that expose my email").
+
 ## 5. Run the notebooks
 
 Open them in `notebooks/` and use **Run all** (compute: **Serverless**).

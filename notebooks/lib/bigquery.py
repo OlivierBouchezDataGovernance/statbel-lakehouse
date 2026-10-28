@@ -8,7 +8,7 @@
 # MAGIC **Required in the calling notebook, before the `%run`:**
 # MAGIC
 # MAGIC ```
-# MAGIC %pip install google-cloud-bigquery "cryptography==46.0.3" pyyaml
+# MAGIC %pip install google-cloud-bigquery cryptography==46.0.3 pyyaml
 # MAGIC %restart_python
 # MAGIC ```
 # MAGIC

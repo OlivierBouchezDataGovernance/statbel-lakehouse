@@ -27,7 +27,7 @@
 
 # COMMAND ----------
 
-# MAGIC %pip install pyyaml google-cloud-bigquery "cryptography==46.0.3"
+# MAGIC %pip install pyyaml google-cloud-bigquery cryptography==46.0.3
 
 # COMMAND ----------
 

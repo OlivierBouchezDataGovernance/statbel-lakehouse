@@ -36,6 +36,7 @@
 import collections
 import datetime
 import json
+import re
 
 ASSETS = os.path.join(find_project_root(), "notebooks", "assets")
 TEMPLATE = os.path.join(ASSETS, "catalog_template.html")
