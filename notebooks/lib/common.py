@@ -256,7 +256,13 @@ REPORT_SCHEMA = (
 
 
 def report(table, check, value, detail=None):
-    """Add one check result to the run report (saved by save_report())."""
+    """Add one check result to the run report (saved by save_report()).
+
+    The table is reported by its configuration name (prefix silver_
+    removed), so that all checks of a table share the same name.
+    """
+    if table.startswith("silver_"):
+        table = table[len("silver_"):]
     REPORT_ROWS.append((
         RUN_ID, datetime.datetime.now(datetime.timezone.utc), table, check,
         float(value), detail,

@@ -16,7 +16,7 @@ material for a governance training.
 | 7 | `eco_bankruptcy` | Activity `????` = unknown (1,385 rows). | orphans counted |
 | 8 | `bld_building_stock` | `01000` (Belgium) is used as a code but is not in the REFNIS list. The 2025 file holds the whole 1995-2025 series. | orphans counted; latest year kept |
 | 9 | `pop_income_by_sector` | `.` marks a value **not available** (confidentiality): 62,392 values. | NULL, counted as `missing_value` (not as an error) |
-| 10 | `pop_by_sector` | Column `OPPERVLAKKTE IN HM²` (space, `²`), decimal comma `52,98`. | renamed `MS_TOT_SUR`, decimal comma accepted |
+| 10 | `pop_by_sector` | Column `OPPERVLAKKTE IN HM²` (space, `²`): **refused by Delta** even in bronze; decimal comma `52,98`. | bronze: only Delta-forbidden characters replaced (reported); silver: renamed `MS_TOT_SUR`, decimal comma accepted |
 | 11 | `mob_road_accident` | `DT_HOUR` holds an hour (`14`), not a date, despite the `DT_` prefix. | type overridden in the configuration |
 | 12 | several | The **same concept has different names**: `CD_REFNIS` / `CD_MUNTY_REFNIS`, and dictionaries that use other names than the files (`CD_SECTOR_2023` for `CD_SECTOR_2024`, `TF_REFNIS_NL` for `CD_REFNIS_NL`). | `dictionary_aliases` in the configuration |
 | 13 | field dictionaries | About 50 different layouts, languages in column order (`Description \| Description` = FR then EN), some without header. One dictionary returns HTTP 404. | normalised by `lib/dictionary` (211 of 214 read) |

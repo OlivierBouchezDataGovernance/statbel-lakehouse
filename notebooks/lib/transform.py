@@ -101,6 +101,19 @@ def read_geojson(path):
     )
 
 
+def delta_safe_columns(df, table):
+    """Replace the characters Delta forbids in column names (" ,;{}()=",
+    tab, new line) by "_": the only renaming done in bronze, reported."""
+    renamed = {
+        c: re.sub(r"[ ,;{}()\n\t=]", "_", c) for c in df.columns
+        if re.search(r"[ ,;{}()\n\t=]", c)
+    }
+    if renamed:
+        report(table["table"], "bronze_renamed_columns", len(renamed),
+               "; ".join(f"{old} -> {new}" for old, new in renamed.items()))
+    return df.toDF(*[renamed.get(c, c) for c in df.columns])
+
+
 def load_bronze(table):
     """Download the sources of a table and write its bronze tables."""
     landing_dir = f"{LANDING_VOLUME}/{table['table']}"
@@ -114,6 +127,7 @@ def load_bronze(table):
         else:
             raise ValueError(f"{table['table']}: unknown format "
                              f"{source['format']}")
+        raw = delta_safe_columns(raw, table)
         rows = write_table(add_lineage_columns(raw, source["url"]), name)
         report(table["table"], "rows_bronze", rows, source["url"])
 
