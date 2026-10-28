@@ -1,0 +1,67 @@
+# Labels of the EU data themes (Publications Office of the EU, data-theme
+# authority table), used by notebook 07_catalog_page.
+AGRI:
+  de: Landwirtschaft, Fischerei, Forstwirtschaft, Nahrungsmittel
+  en: Agriculture, fisheries, forestry and food
+  fr: Agriculture, pêche, sylviculture, alimentation
+  nl: Landbouw, visserij, bosbouw, voeding
+ECON:
+  de: Wirtschaft und Finanzen
+  en: Economy and finance
+  fr: Économie et finances
+  nl: Economie en financiën
+EDUC:
+  de: Bildung, Kultur und Sport
+  en: Education, culture and sport
+  fr: Éducation, culture et sport
+  nl: Onderwijs, cultuur en sport
+ENER:
+  de: Energie
+  en: Energy
+  fr: Énergie
+  nl: Energie
+ENVI:
+  de: Umwelt
+  en: Environment
+  fr: Environnement
+  nl: Milieu
+GOVE:
+  de: Regierung und öffentlicher Sektor
+  en: Government and public sector
+  fr: Gouvernement et secteur public
+  nl: Overheid en publieke sector
+HEAL:
+  de: Gesundheit
+  en: Health
+  fr: Santé
+  nl: Gezondheid
+INTR:
+  de: Internationale Themen
+  en: International issues
+  fr: Questions internationales
+  nl: Internationale vraagstukken
+JUST:
+  de: Justiz, Rechtssystem und öffentliche Sicherheit
+  en: Justice, legal system and public safety
+  fr: Justice, système juridique et sécurité publique
+  nl: Justitie, rechtsstelsel en openbare veiligheid
+REGI:
+  de: Regionen und Städte
+  en: Regions and cities
+  fr: Régions et villes
+  nl: Regio's en steden
+SOCI:
+  de: Bevölkerung und Gesellschaft
+  en: Population and society
+  fr: Population et société
+  nl: Bevolking en samenleving
+TECH:
+  de: Wissenschaft und Technologie
+  en: Science and technology
+  fr: Science et technologie
+  nl: Wetenschap en technologie
+TRAN:
+  de: Verkehr
+  en: Transport
+  fr: Transports
+  nl: Vervoer

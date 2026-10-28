@@ -48,6 +48,7 @@ flowchart LR
 | Tag | `04_governance_tags` | Unity Catalog tags: business domain, personal data, licence, representation of each column |
 | Catalog access | `05_openmetadata_access` | read-only rights for the OpenMetadata Unity Catalog connector ([docs/openmetadata.md](docs/openmetadata.md)) |
 | Answer key | `06_training_answer_key` | trainer only: each silver column ↔ suggested business term of the [glossary](glossary/README.md) (64 % of the columns), written outside git and outside the catalog |
+| Catalog page | `07_catalog_page` | one self-contained web page of the Statbel catalog: search on datasets, files and field names; field descriptions in EN/FR/NL/DE |
 | Learn | `tutorial/01-03` | the same method, step by step, by hand, for two tables |
 
 The **business glossary** (5 glossaries, 127 terms, OpenMetadata 2.0 import
@@ -120,6 +121,7 @@ openmetadata/  connector configurations (placeholders, no secrets)
 notebooks/
   00_setup  01_statbel_catalog  02_load_statbel  03_publish_bigquery
   04_governance_tags  05_openmetadata_access  06_training_answer_key
+  07_catalog_page     assets/ (page template, EU data themes)
   lib/      config · common · dictionary · transform · bigquery · governance
   tutorial/ 01_ref_municipality · 02_publish_ref_municipality · 03_ref_first_name
 docs/       install, Databricks Free Edition, configuration, architecture,
