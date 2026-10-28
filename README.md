@@ -49,6 +49,7 @@ flowchart LR
 | Catalog access | `05_openmetadata_access` | read-only rights for the OpenMetadata Unity Catalog connector ([docs/openmetadata.md](docs/openmetadata.md)) |
 | Answer key | `06_training_answer_key` | trainer only: each silver column ↔ suggested business term of the [glossary](glossary/README.md) (64 % of the columns), written outside git and outside the catalog |
 | Catalog page | `07_catalog_page` | one self-contained web page of the Statbel catalog: search on datasets, files and field names; field descriptions in EN/FR/NL/DE |
+| Glossary files | `08_glossary_import_files` | [`glossary/terms.yml`](glossary/terms.yml) → OpenMetadata import files (two passes), each term mapped to the Statbel columns it explains |
 | Learn | `tutorial/01-03` | the same method, step by step, by hand, for two tables |
 
 The **business glossary** (5 glossaries, 127 terms, OpenMetadata 2.0 import
@@ -116,12 +117,14 @@ config/
   datasets.yml               the Statbel tables to load and how (in git)
   environment.example.yml    template of your settings (the real file is
                              written by 00_setup in a Databricks volume)
-glossary/   business glossary: OpenMetadata 2.0 import files (2 passes)
+glossary/   business glossary: terms.yml, its generator and the
+            OpenMetadata 2.0 import files (2 passes)
 openmetadata/  connector configurations (placeholders, no secrets)
 notebooks/
   00_setup  01_statbel_catalog  02_load_statbel  03_publish_bigquery
   04_governance_tags  05_openmetadata_access  06_training_answer_key
-  07_catalog_page     assets/ (page template, EU data themes)
+  07_catalog_page     08_glossary_import_files
+  assets/   page template, EU data themes
   lib/      config · common · dictionary · transform · bigquery · governance
   tutorial/ 01_ref_municipality · 02_publish_ref_municipality · 03_ref_first_name
 docs/       install, Databricks Free Edition, configuration, architecture,

@@ -3,6 +3,11 @@
 # ---------------------------------------------------------------------------
 # Service account keys and any other JSON credential files
 *.json
+# ... except the public glossary files (no secret: Statbel column names,
+# OpenMetadata setup reference and counts)
+!glossary/statbel_columns.json
+!glossary/openmetadata-import/setup.json
+!glossary/openmetadata-import/stats.json
 # Environment files, certificates, private keys
 .env
 .env.*

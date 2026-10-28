@@ -25,15 +25,51 @@ See the result, readable without an account:
 ## Files
 
 ```
-openmetadata-import/
+terms.yml                 the glossary: the single source, edit it here
+generator.py              terms.yml -> OpenMetadata import files
+statbel_columns.json      snapshot of the Statbel column names (input of
+                          the source-column mapping)
+openmetadata-import/      generated files, do not edit by hand
   pass1-terms/            the 127 terms, without related terms
   pass2-related-terms/    the 42 terms that have related terms
+  setup.json              TermType tags, domains and glossaries to create
+  glossary_master.csv     one row per term with its Statbel source columns
+  stats.json              counts: terms by glossary, type and level; columns
 ```
 
 Format: glossary import of **OpenMetadata 2.0** (tested on 2.0.6), 15
 columns in this order: `parent, name*, displayName, description, synonyms,
 relatedTerms, references, tags, reviewers, owner, glossaryStatus, color,
 iconURL, domains, extension`.
+
+## Change the glossary and regenerate the files
+
+Each term of `terms.yml` has a glossary, a parent path, a name, a type, a
+definition and, optionally, synonyms (with `FR:` and `NL:` prefixes),
+related terms, references, tags, a steward note and a `source_pattern`: a
+regular expression matched against the column names of the Statbel field
+dictionaries. The matching columns are written in the description as
+mapping evidence (`**Source columns (Statbel):** CD_REFNIS, …`). The header
+of `terms.yml` lists every key.
+
+**In Databricks**: edit `glossary/terms.yml` in the Git folder, then run
+the notebook **`08_glossary_import_files`**. It reads the column names of
+the table `meta_field` (notebook `01_statbel_catalog`, widget `columns`) or
+the snapshot, writes the files to the volume `export/glossary`, shows the
+files that changed and, with the widget `copy_to_repository = true`, copies
+them to the Git folder for a commit.
+
+**On a computer** (Python 3.9+ and PyYAML), from the repository root:
+
+```bash
+python glossary/generator.py                 # writes openmetadata-import/
+python glossary/generator.py --out /tmp/gl   # elsewhere
+```
+
+The generator checks `terms.yml` before writing anything: unknown keys,
+glossaries, types or references, duplicate terms, missing parents and
+related terms that do not exist stop it with a clear message. Only the
+changed files need to be imported again (same two passes).
 
 ## Import into OpenMetadata
 

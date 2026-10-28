@@ -1,0 +1,54 @@
+{
+ "classification": {
+  "name": "TermType",
+  "description": "Type of a business glossary term, as defined in DG-GDL-001 chapter 3.",
+  "tags": {
+   "SubjectArea": "Grouping used to navigate; carries no data itself.",
+   "BusinessObject": "A thing with its own identity and life cycle.",
+   "Characteristic": "A property that describes a business object.",
+   "Role": "A shared object seen from one business context.",
+   "Measure": "A quantity the business reads, with unit and aggregation.",
+   "Classification": "An official or managed list of codes.",
+   "Identifier": "A code that identifies one instance."
+  }
+ },
+ "domains": [
+  "Built Environment",
+  "Cross-domain",
+  "Economy",
+  "Mobility",
+  "Population and Society"
+ ],
+ "glossaries": [
+  {
+   "name": "Shared Business Vocabulary",
+   "domain": "Cross-domain",
+   "owner": "Data Governance Office (Reference Data Owner)",
+   "description": "Business concepts reused by several domains: parties, locations, time and statistical classifications. Domain glossaries link to these terms instead of redefining them."
+  },
+  {
+   "name": "Population and Households",
+   "domain": "Population and Society",
+   "owner": "Population & Society Data Owner",
+   "description": "Concepts used to describe the resident population, households, vital events, names, labour, education and living conditions."
+  },
+  {
+   "name": "Enterprises and Economy",
+   "domain": "Economy",
+   "owner": "Economy Data Owner",
+   "description": "Concepts used to describe enterprises, their demography, prices and economic activity."
+  },
+  {
+   "name": "Mobility and Road Safety",
+   "domain": "Mobility",
+   "owner": "Mobility Data Owner",
+   "description": "Concepts used to describe road accidents, their casualties and the vehicles involved."
+  },
+  {
+   "name": "Buildings and Real Estate",
+   "domain": "Built Environment",
+   "owner": "Built Environment Data Owner",
+   "description": "Concepts used to describe the building stock, dwellings, land and the real estate market."
+  }
+ ]
+}

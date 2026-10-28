@@ -1,0 +1,32 @@
+{
+ "dictionaries": 214,
+ "column_occurrences": 6241,
+ "distinct_columns": 2089,
+ "columns_in_5_dictionaries_or_more": 147,
+ "matched_distinct_columns": 527,
+ "matched_column_occurrences": 3550,
+ "terms": 127,
+ "terms_with_related_terms": 42,
+ "terms_with_source_columns": 83,
+ "by_glossary": {
+  "Shared Business Vocabulary": 41,
+  "Population and Households": 34,
+  "Enterprises and Economy": 18,
+  "Mobility and Road Safety": 18,
+  "Buildings and Real Estate": 16
+ },
+ "by_type": {
+  "Subject Area": 19,
+  "Business Object": 29,
+  "Characteristic": 15,
+  "Classification": 31,
+  "Identifier": 2,
+  "Measure": 22,
+  "Role": 9
+ },
+ "by_level": {
+  "1": 19,
+  "2": 89,
+  "3": 19
+ }
+}

@@ -1,0 +1,1797 @@
+# Business glossary of the Statbel open data (guideline DG-GDL-001).
+#
+# This file is the single source of the glossary: edit the terms here, then
+# run glossary/generator.py (or notebook 08_glossary_import_files) to write
+# the OpenMetadata import files. See glossary/README.md.
+#
+# Term keys
+#   glossary        key of the glossary (see `glossaries`)
+#   path            parent terms inside the glossary ([] = root term)
+#   name            term name (unique under its parent)
+#   type            SubjectArea, BusinessObject, Characteristic, Role,
+#                   Measure, Classification or Identifier (with spaces)
+#   definition      business definition
+#   synonyms        other names, including French (FR:) and Dutch (NL:)
+#   related         fully qualified names of related terms
+#   source_pattern  regular expression matched against the Statbel column
+#                   names, to list the source columns the term explains
+#   tags            OpenMetadata tags, e.g. PersonalData.Personal
+#   references      keys of `references`
+#   steward_note    remark of the data steward
+#
+# (c) 2026 Olivier Bouchez - CC BY-NC 4.0 - https://olivier-bouchez.com
+
+glossaries:
+- key: SBV
+  name: Shared Business Vocabulary
+  domain: Cross-domain
+  owner: Data Governance Office (Reference Data Owner)
+  description: 'Business concepts reused by several domains: parties, locations,
+    time and statistical classifications. Domain glossaries link to these
+    terms instead of redefining them.'
+- key: POP
+  name: Population and Households
+  domain: Population and Society
+  owner: Population & Society Data Owner
+  description: Concepts used to describe the resident population, households,
+    vital events, names, labour, education and living conditions.
+- key: ENT
+  name: Enterprises and Economy
+  domain: Economy
+  owner: Economy Data Owner
+  description: Concepts used to describe enterprises, their demography, prices
+    and economic activity.
+- key: MOB
+  name: Mobility and Road Safety
+  domain: Mobility
+  owner: Mobility Data Owner
+  description: Concepts used to describe road accidents, their casualties
+    and the vehicles involved.
+- key: BRE
+  name: Buildings and Real Estate
+  domain: Built Environment
+  owner: Built Environment Data Owner
+  description: Concepts used to describe the building stock, dwellings, land
+    and the real estate market.
+
+references:
+  refnis:
+    title: Statbel - Code REFNIS
+    url: https://statbel.fgov.be/en/open-data/code-refnis-0
+  nace:
+    title: Statbel - NACE-BEL 2008
+    url: https://statbel.fgov.be/en/open-data/nace-bel-2008-classification
+  isco:
+    title: Statbel - ISCO-2008
+    url: https://statbel.fgov.be/en/open-data/isco-2008-classification-4-digits
+  isced:
+    title: Statbel - ISCED-F 2013
+    url: https://statbel.fgov.be/en/open-data/code-isced-f-2013-4-digits
+  nuts:
+    title: Statbel - NUTS codes
+    url: https://statbel.fgov.be/en/open-data/nuts-codes-2027
+  sector:
+    title: Statbel - Statistical sectors 2024
+    url: https://statbel.fgov.be/en/open-data/statistical-sectors-2024
+  address:
+    title: Statbel - Address file with statistical sector
+    url: https://statbel.fgov.be/en/open-data/address-file-statistical-sector-0
+  acc:
+    title: Statbel - Road accidents 2023
+    url: https://statbel.fgov.be/en/open-data/road-accidents-2023
+  cas:
+    title: Statbel - Road casualties 2023
+    url: https://statbel.fgov.be/en/open-data/road-casualties-2023
+  family:
+    title: Statbel - Family names
+    url: https://statbel.fgov.be/en/open-data/family-names-total-population-municipality
+  cpi:
+    title: Statbel - Consumer price index and health index
+    url: https://statbel.fgov.be/en/open-data/consumer-price-index-and-health-index
+  cars:
+    title: Statbel - Cars per household type
+    url: https://statbel.fgov.be/en/open-data/number-cars-household-type-municipality
+  land:
+    title: Statbel - Land cover
+    url: https://statbel.fgov.be/en/open-data/land-cover-according-land-register
+  birth:
+    title: Statbel - Crude birth rate
+    url: https://statbel.fgov.be/en/open-data/hvd-crude-birth-rate
+  iso3166:
+    title: ISO 3166 Country codes
+    url: https://www.iso.org/iso-3166-country-codes.html
+
+terms:
+
+  # ------------------------------------------------------------------
+  # Shared Business Vocabulary
+  # ------------------------------------------------------------------
+
+  - glossary: SBV
+    path: []
+    name: Party
+    type: Subject Area
+    definition: Grouping of the concepts that describe anyone, a natural person
+      or an organisation, about whom information is recorded.
+    synonyms:
+    - Stakeholder
+
+  - glossary: SBV
+    path:
+    - Party
+    name: Person
+    type: Business Object
+    definition: A human being considered as an individual who has rights and
+      obligations; the business-to-consumer side of a party.
+    synonyms:
+    - Natural Person
+    - Individual
+    - 'FR: Personne physique'
+    - 'NL: Natuurlijke persoon'
+    related:
+    - Shared Business Vocabulary.Party.Party Type
+    tags:
+    - PersonalData.Personal
+    steward_note: Unit counted in most population statistics.
+
+  - glossary: SBV
+    path:
+    - Party
+    - Person
+    name: Sex
+    type: Characteristic
+    definition: Biological classification of a person as male or female, as
+      recorded in the population register.
+    synonyms:
+    - Gender
+    - 'FR: Sexe'
+    - 'NL: Geslacht'
+    source_pattern: ^(CD|TX)_(SEX|GENDER)|^MS_SEX_
+    tags:
+    - PersonalData.Personal
+    steward_note: 9 different column names in the source for one concept.
+
+  - glossary: SBV
+    path:
+    - Party
+    - Person
+    name: Age
+    type: Characteristic
+    definition: Number of full years a person has lived at the reference date.
+    synonyms:
+    - 'FR: Âge'
+    - 'NL: Leeftijd'
+    related:
+    - Shared Business Vocabulary.Party.Person.Age Group
+    source_pattern: ^CD_AGE$|^TX_AGE_DESCR
+    tags:
+    - PersonalData.Personal
+
+  - glossary: SBV
+    path:
+    - Party
+    - Person
+    name: Age Group
+    type: Classification
+    definition: Grouping of ages into contiguous ranges used to publish statistics.
+    synonyms:
+    - Age Class
+    - 'FR: Classe d''âge'
+    - 'NL: Leeftijdsgroep'
+    related:
+    - Shared Business Vocabulary.Party.Person.Age
+    source_pattern: ^CD_AGE_LVL|AGE_CLS
+
+  - glossary: SBV
+    path:
+    - Party
+    - Person
+    name: Marital Status
+    type: Characteristic
+    definition: 'Legal situation of a person with respect to marriage: single,
+      married, widowed or divorced.'
+    synonyms:
+    - Civil Status
+    - Legal Marital Status
+    - 'FR: État civil'
+    - 'NL: Burgerlijke staat'
+    source_pattern: ^(CD|TX)_LMS|MARITAL|CIV_STAT
+    tags:
+    - PersonalData.Personal
+
+  - glossary: SBV
+    path:
+    - Party
+    - Person
+    name: Citizenship
+    type: Characteristic
+    definition: Country whose nationality a person legally holds at the reference
+      date.
+    synonyms:
+    - Nationality
+    - Country of Citizenship
+    - 'FR: Nationalité'
+    - 'NL: Nationaliteit'
+    related:
+    - Shared Business Vocabulary.Location.Country
+    source_pattern: _COC_|NATIONALITY|^CD_NATLTY
+    tags:
+    - PersonalData.Personal
+    steward_note: A characteristic of Person whose values come from Country.
+
+  - glossary: SBV
+    path:
+    - Party
+    name: Person Name
+    type: Business Object
+    definition: Words by which a person is known and identified, made of one
+      or more first names and a family name.
+    synonyms:
+    - Personal Name
+    - 'FR: Nom de personne'
+    - 'NL: Persoonsnaam'
+    tags:
+    - PersonalData.Personal
+    references:
+    - family
+    steward_note: 'Anticipated shared term: reused by any business-to-consumer
+      domain.'
+
+  - glossary: SBV
+    path:
+    - Party
+    - Person Name
+    name: First Name
+    type: Characteristic
+    definition: Name given to a person at birth or later, used to distinguish
+      the person from members of the same family.
+    synonyms:
+    - Given Name
+    - Forename
+    - 'FR: Prénom'
+    - 'NL: Voornaam'
+    tags:
+    - PersonalData.Personal
+
+  - glossary: SBV
+    path:
+    - Party
+    - Person Name
+    name: Family Name
+    type: Characteristic
+    definition: Name shared by members of a family and passed on by descent
+      or by law.
+    synonyms:
+    - Surname
+    - Last Name
+    - 'FR: Nom de famille'
+    - 'NL: Familienaam'
+    tags:
+    - PersonalData.Personal
+    references:
+    - family
+
+  - glossary: SBV
+    path:
+    - Party
+    name: Organisation
+    type: Business Object
+    definition: A legal person or other body set up to pursue an activity, recognised
+      as a party distinct from the people who compose it.
+    synonyms:
+    - Legal Person
+    - Legal Entity
+    - 'FR: Personne morale'
+    - 'NL: Rechtspersoon'
+    related:
+    - Shared Business Vocabulary.Party.Party Type
+    steward_note: The business-to-business side of a party.
+
+  - glossary: SBV
+    path:
+    - Party
+    - Organisation
+    name: Legal Form
+    type: Classification
+    definition: Legal structure under which an organisation is constituted,
+      such as a public limited company or a non-profit association.
+    synonyms:
+    - Juridical Form
+    - 'FR: Forme juridique'
+    - 'NL: Rechtsvorm'
+    source_pattern: LEGAL_FORM
+
+  - glossary: SBV
+    path:
+    - Party
+    - Organisation
+    name: Enterprise Number
+    type: Identifier
+    definition: Unique number given by the Crossroads Bank for Enterprises to
+      every registered enterprise in Belgium.
+    synonyms:
+    - KBO Number
+    - BCE Number
+    - Company Number
+    - 'FR: Numéro d''entreprise'
+    - 'NL: Ondernemingsnummer'
+    steward_note: 'Not present in the open data (anonymised) but anticipated:
+      it is the key to align with any other B2B domain.'
+
+  - glossary: SBV
+    path:
+    - Party
+    name: Party Type
+    type: Classification
+    definition: Classification of a party as a natural person or a legal person.
+    synonyms:
+    - Enterprise Type
+    - Person Type
+    - 'FR: Type de personne'
+    - 'NL: Persoonstype'
+    related:
+    - Shared Business Vocabulary.Party.Person
+    - Shared Business Vocabulary.Party.Organisation
+    source_pattern: ^TYPE_ENT
+    steward_note: The B2C / B2B split; source column names it 'type of enterprise'.
+
+  - glossary: SBV
+    path:
+    - Party
+    name: Party Relationship
+    type: Business Object
+    definition: Link between two parties in which one party plays a defined
+      role towards the other, such as employment, ownership or directorship.
+    synonyms:
+    - Party Role
+    - 'FR: Relation entre parties'
+    - 'NL: Relatie tussen partijen'
+    related:
+    - Shared Business Vocabulary.Party.Person
+    - Shared Business Vocabulary.Party.Organisation
+    steward_note: Holds who works for, owns or manages whom; the reason Party
+      is modelled once.
+
+  - glossary: SBV
+    path:
+    - Party
+    - Party Relationship
+    name: Party Relationship Type
+    type: Classification
+    definition: 'Classification of the role one party plays towards another:
+      employee, owner or shareholder, director or administrator, or self-employed
+      operator of its own business.'
+    synonyms:
+    - Role Type
+    - 'FR: Type de relation'
+    - 'NL: Type relatie'
+    source_pattern: ^MS_EMPL_
+    steward_note: Statbel publishes jobs (employment relationships) as counts,
+      e.g. MS_EMPL_TOT.
+
+  - glossary: SBV
+    path: []
+    name: Location
+    type: Subject Area
+    definition: Grouping of the concepts that describe where something is, happens
+      or is registered.
+    synonyms:
+    - Geography
+    - Place
+
+  - glossary: SBV
+    path:
+    - Location
+    name: Address
+    type: Business Object
+    definition: Structured information that identifies a physical or postal
+      location at which a party resides, operates or receives mail.
+    synonyms:
+    - Postal Address
+    - 'FR: Adresse'
+    - 'NL: Adres'
+    tags:
+    - PersonalData.Personal
+    references:
+    - address
+    steward_note: Defined in DG-STD-001 section 7; reused here, not redefined.
+
+  - glossary: SBV
+    path:
+    - Location
+    - Address
+    name: Street
+    type: Business Object
+    definition: Public road identified by an official name and code within a
+      municipality.
+    synonyms:
+    - 'FR: Rue'
+    - 'NL: Straat'
+    source_pattern: ^CD_STR$|^TX_STR_NM
+
+  - glossary: SBV
+    path:
+    - Location
+    - Address
+    name: House Number
+    type: Characteristic
+    definition: Number, with optional suffix, given to a building or plot along
+      a street.
+    synonyms:
+    - 'FR: Numéro de police'
+    - 'NL: Huisnummer'
+    source_pattern: ^TX_HO_NR|^FL_EVEN
+
+  - glossary: SBV
+    path:
+    - Location
+    - Address
+    name: Postal Code
+    type: Characteristic
+    definition: Code of the postal delivery area to which an address belongs.
+    synonyms:
+    - Post Code
+    - ZIP Code
+    - 'FR: Code postal'
+    - 'NL: Postcode'
+    source_pattern: ^CD_ZIP|POSTAL|POST_CODE
+
+  - glossary: SBV
+    path:
+    - Location
+    name: Geographic Coordinates
+    type: Characteristic
+    definition: Pair of values that positions a location on the earth's surface
+      in a stated reference system.
+    synonyms:
+    - XY
+    - Geocode
+    - Latitude and Longitude
+    source_pattern: ^XY_|^MS_X_COORD|^MS_Y_COORD|LATITUDE|LONGITUDE
+
+  - glossary: SBV
+    path:
+    - Location
+    name: Administrative Area
+    type: Business Object
+    definition: Part of the Belgian territory with defined boundaries, used
+      for administration or statistics and identified by a REFNIS code.
+    synonyms:
+    - Geographic Entity
+    - REFNIS Area
+    - 'FR: Entité administrative'
+    - 'NL: Administratieve eenheid'
+    related:
+    - Shared Business Vocabulary.Location.Administrative Area.REFNIS Code
+    source_pattern: REFNIS|^CD_NIVEAU
+    references:
+    - refnis
+    steward_note: 117 column names in the source refer to these areas.
+
+  - glossary: SBV
+    path:
+    - Location
+    - Administrative Area
+    name: Region
+    type: Business Object
+    definition: 'One of the three federated regions of Belgium: Brussels-Capital,
+      Flemish and Walloon.'
+    synonyms:
+    - 'FR: Région'
+    - 'NL: Gewest'
+    source_pattern: _RGN_|^CD_REGION|REGION_|_REFNIS_LVL_1$
+
+  - glossary: SBV
+    path:
+    - Location
+    - Administrative Area
+    name: Province
+    type: Business Object
+    definition: Administrative subdivision of a region, of which Belgium counts
+      ten.
+    synonyms:
+    - 'FR: Province'
+    - 'NL: Provincie'
+    source_pattern: PROV|_REFNIS_LVL_2$
+
+  - glossary: SBV
+    path:
+    - Location
+    - Administrative Area
+    name: Administrative District
+    type: Business Object
+    definition: Administrative subdivision of a province grouping several municipalities.
+    synonyms:
+    - Arrondissement
+    - 'FR: Arrondissement'
+    - 'NL: Arrondissement'
+    source_pattern: ^CD_DSTR|ADM_DSTR|_REFNIS_LVL_3$
+
+  - glossary: SBV
+    path:
+    - Location
+    - Administrative Area
+    name: Municipality
+    type: Business Object
+    definition: Lowest level of local government, of which Belgium counts 565
+      since 2025.
+    synonyms:
+    - Commune
+    - 'FR: Commune'
+    - 'NL: Gemeente'
+    source_pattern: MUNTY|_REFNIS_LVL_4$|MUNICIP
+
+  - glossary: SBV
+    path:
+    - Location
+    - Administrative Area
+    name: Statistical Sector
+    type: Business Object
+    definition: Smallest territorial unit defined by Statbel inside a municipality
+      for statistical publication.
+    synonyms:
+    - 'FR: Secteur statistique'
+    - 'NL: Statistische sector'
+    source_pattern: SECTOR
+    references:
+    - sector
+
+  - glossary: SBV
+    path:
+    - Location
+    - Administrative Area
+    name: REFNIS Code
+    type: Identifier
+    definition: Code that identifies an administrative area in the national
+      REFNIS nomenclature maintained by Statbel.
+    synonyms:
+    - NIS Code
+    - 'FR: Code INS'
+    - 'NL: NIS-code'
+    source_pattern: ^CD_.*REFNIS|^CD_REFNIS
+    references:
+    - refnis
+
+  - glossary: SBV
+    path:
+    - Location
+    name: NUTS Region
+    type: Classification
+    definition: Territorial unit of the European Nomenclature of Territorial
+      Units for Statistics.
+    synonyms:
+    - 'FR: Région NUTS'
+    - 'NL: NUTS-regio'
+    source_pattern: NUTS
+    references:
+    - nuts
+
+  - glossary: SBV
+    path:
+    - Location
+    name: Country
+    type: Business Object
+    definition: Sovereign state or territory identified by an ISO 3166-1 code.
+    synonyms:
+    - 'FR: Pays'
+    - 'NL: Land'
+    source_pattern: COUNTRY|_COC_|_POB_|_COB_
+    references:
+    - iso3166
+
+  - glossary: SBV
+    path:
+    - Location
+    name: Grid Cell
+    type: Business Object
+    definition: Square of fixed size in a European reference grid used to publish
+      statistics independently of administrative boundaries.
+    synonyms:
+    - Km² Grid Cell
+    - 'FR: Cellule de grille'
+    - 'NL: Rastercel'
+    source_pattern: GRD|GRID
+
+  - glossary: SBV
+    path: []
+    name: Time
+    type: Subject Area
+    definition: Grouping of the concepts that position facts and statistics
+      in time.
+    synonyms:
+    - Calendar
+
+  - glossary: SBV
+    path:
+    - Time
+    name: Reference Period
+    type: Characteristic
+    definition: Period of time, such as a year, quarter, month or day, to which
+      a statistic or a fact refers.
+    synonyms:
+    - Period
+    - 'FR: Période de référence'
+    - 'NL: Referentieperiode'
+    source_pattern: ^CD_YEAR|^YEAR$|^MONTH$|^CD_PERIOD|^NM_YR|^DT_DATE|^DT_DAY$|^CD_MONTH|^DT_YEAR|^DT_MONTH
+
+  - glossary: SBV
+    path:
+    - Time
+    name: Reference Date
+    type: Characteristic
+    definition: Calendar day at which a stock, such as a population or a building
+      stock, is measured.
+    synonyms:
+    - Snapshot Date
+    - 'FR: Date de référence'
+    - 'NL: Referentiedatum'
+    source_pattern: ^DT_DATE|^DT_REF
+
+  - glossary: SBV
+    path:
+    - Time
+    name: Validity Period
+    type: Characteristic
+    definition: Start and end dates between which a code, area or record is
+      valid.
+    synonyms:
+    - Valid From - Valid To
+    - 'FR: Période de validité'
+    - 'NL: Geldigheidsperiode'
+    source_pattern: VLDT|^DT_STRT|^DT_STOP
+
+  - glossary: SBV
+    path: []
+    name: Statistical Classifications
+    type: Subject Area
+    definition: Grouping of the official classifications used to code activities,
+      occupations, education and products.
+    synonyms:
+    - Nomenclatures
+    - Code Lists
+
+  - glossary: SBV
+    path:
+    - Statistical Classifications
+    name: Economic Activity
+    type: Classification
+    definition: Kind of production in which a unit is engaged, coded in the
+      NACE-BEL classification.
+    synonyms:
+    - Activity Sector
+    - NACE Code
+    - 'FR: Activité économique'
+    - 'NL: Economische activiteit'
+    source_pattern: NACE|_IND_|^CD_IND$
+    references:
+    - nace
+
+  - glossary: SBV
+    path:
+    - Statistical Classifications
+    name: Occupation
+    type: Classification
+    definition: Kind of work performed in a job, coded in the ISCO-08 classification.
+    synonyms:
+    - Profession
+    - 'FR: Profession'
+    - 'NL: Beroep'
+    source_pattern: ISCO|_OCC_|^CD_OCC
+    references:
+    - isco
+
+  - glossary: SBV
+    path:
+    - Statistical Classifications
+    name: Field of Education
+    type: Classification
+    definition: Subject domain of an education programme or qualification, coded
+      in ISCED-F 2013.
+    synonyms:
+    - 'FR: Domaine d''études'
+    - 'NL: Studiegebied'
+    source_pattern: ISCED|_FOS_
+    references:
+    - isced
+
+  - glossary: SBV
+    path:
+    - Statistical Classifications
+    name: Product Category
+    type: Classification
+    definition: Group of goods or services in a product classification such
+      as CPA, PRODCOM or COICOP.
+    synonyms:
+    - Product Group
+    - 'FR: Groupe de produits'
+    - 'NL: Productgroep'
+    source_pattern: COICOP|PRODCOM|^CD_CPA
+
+  # ------------------------------------------------------------------
+  # Population and Households
+  # ------------------------------------------------------------------
+
+  - glossary: POP
+    path: []
+    name: Population
+    type: Subject Area
+    definition: Grouping of the concepts that describe the people living in
+      Belgium and where they live.
+
+  - glossary: POP
+    path:
+    - Population
+    name: Resident Population
+    type: Business Object
+    definition: All persons whose main residence is registered in Belgium at
+      the reference date.
+    synonyms:
+    - Legal Population
+    - 'FR: Population résidente'
+    - 'NL: Bevolking'
+    related:
+    - Shared Business Vocabulary.Party.Person
+    - Shared Business Vocabulary.Time.Reference Date
+
+  - glossary: POP
+    path:
+    - Population
+    name: Population Count
+    type: Measure
+    definition: Number of persons in the resident population that share the
+      stated characteristics at the reference date.
+    synonyms:
+    - Number of Inhabitants
+    - 'FR: Nombre d''habitants'
+    - 'NL: Aantal inwoners'
+    related:
+    - Population and Households.Population.Resident Population
+    source_pattern: ^MS_POP|^MS_TOT_RESIDENTS|^MS_NBR_PERS
+
+  - glossary: POP
+    path:
+    - Population
+    name: Place of Residence
+    type: Role
+    definition: Administrative area where a person has the main residence at
+      the reference date.
+    synonyms:
+    - 'FR: Lieu de résidence'
+    - 'NL: Woonplaats'
+    related:
+    - Shared Business Vocabulary.Location.Administrative Area
+    source_pattern: _REFNIS_LVL_|_RES_LVL
+
+  - glossary: POP
+    path:
+    - Population
+    name: Place of Residence One Year Before
+    type: Role
+    definition: Administrative area or country where a person had the main residence
+      one year before the reference date.
+    synonyms:
+    - 'FR: Lieu de résidence un an auparavant'
+    - 'NL: Woonplaats een jaar eerder'
+    related:
+    - Shared Business Vocabulary.Location.Administrative Area
+    - Shared Business Vocabulary.Location.Country
+    source_pattern: _ROY_
+
+  - glossary: POP
+    path:
+    - Population
+    name: Place of Birth
+    type: Role
+    definition: Country, or administrative area for persons born in Belgium,
+      where a person was born.
+    synonyms:
+    - Country of Birth
+    - 'FR: Lieu de naissance'
+    - 'NL: Geboorteplaats'
+    related:
+    - Shared Business Vocabulary.Location.Country
+    - Shared Business Vocabulary.Location.Administrative Area
+    source_pattern: _POB_|_COB_
+    tags:
+    - PersonalData.Personal
+
+  - glossary: POP
+    path:
+    - Population
+    name: Year of Arrival in Belgium
+    type: Characteristic
+    definition: Year in which a person born abroad most recently established
+      residence in Belgium.
+    synonyms:
+    - 'FR: Année d''immigration'
+    - 'NL: Jaar van immigratie'
+    source_pattern: _YAE
+
+  - glossary: POP
+    path: []
+    name: Household
+    type: Subject Area
+    definition: Grouping of the concepts that describe how persons live together.
+
+  - glossary: POP
+    path:
+    - Household
+    name: Private Household
+    type: Business Object
+    definition: One person living alone or several persons sharing the same
+      main residence and providing for their own needs.
+    synonyms:
+    - Household
+    - 'FR: Ménage privé'
+    - 'NL: Privéhuishouden'
+    source_pattern: ^MS_NUM_HH|^MS_MENAGES
+
+  - glossary: POP
+    path:
+    - Household
+    name: Household Type
+    type: Classification
+    definition: Classification of private households by their composition, such
+      as single person or couple with children.
+    synonyms:
+    - 'FR: Type de ménage'
+    - 'NL: Huishoudtype'
+    source_pattern: HH_TYPE|_TFN_
+
+  - glossary: POP
+    path:
+    - Household
+    name: Position in Household
+    type: Classification
+    definition: Role a person holds within a private household, such as reference
+      person, partner or child.
+    synonyms:
+    - 'FR: Position dans le ménage'
+    - 'NL: Positie in het huishouden'
+    source_pattern: _HST_
+
+  - glossary: POP
+    path:
+    - Household
+    name: Family Nucleus
+    type: Business Object
+    definition: Two or more persons of the same private household who are a
+      couple, with or without children, or a parent with children.
+    synonyms:
+    - Family
+    - 'FR: Noyau familial'
+    - 'NL: Gezinskern'
+    related:
+    - Population and Households.Household.Private Household
+    source_pattern: NOYAUX|_NUCL
+
+  - glossary: POP
+    path:
+    - Household
+    name: Position in Family
+    type: Classification
+    definition: Role a person holds within a family nucleus, such as partner,
+      lone parent or child.
+    synonyms:
+    - Family Status
+    - 'FR: Position dans la famille'
+    - 'NL: Positie in het gezin'
+    source_pattern: _FST
+
+  - glossary: POP
+    path:
+    - Household
+    name: Housing Arrangement
+    type: Classification
+    definition: Type of living quarters in which a person lives, such as a conventional
+      dwelling or a collective living quarter.
+    synonyms:
+    - 'FR: Conditions de logement'
+    - 'NL: Woonsituatie'
+    related:
+    - Buildings and Real Estate.Building Stock.Dwelling
+    source_pattern: _HAR_
+
+  - glossary: POP
+    path:
+    - Household
+    name: Number of Cars per Household
+    type: Measure
+    definition: Number of passenger cars registered to the members of a private
+      household.
+    synonyms:
+    - 'FR: Nombre de voitures par ménage'
+    - 'NL: Aantal wagens per huishouden'
+    source_pattern: CARS_PER_HH|^MS_NUM_CAR
+    references:
+    - cars
+
+  - glossary: POP
+    path: []
+    name: Vital Events
+    type: Subject Area
+    definition: Grouping of the concepts that describe births, deaths and changes
+      of civil status.
+
+  - glossary: POP
+    path:
+    - Vital Events
+    name: Birth
+    type: Business Object
+    definition: Event of a child being born alive, registered in the population
+      register.
+    synonyms:
+    - Live Birth
+    - 'FR: Naissance'
+    - 'NL: Geboorte'
+    source_pattern: BIRTH
+    references:
+    - birth
+
+  - glossary: POP
+    path:
+    - Vital Events
+    name: Death
+    type: Business Object
+    definition: Event of a registered person ceasing to live.
+    synonyms:
+    - 'FR: Décès'
+    - 'NL: Overlijden'
+    source_pattern: DEATH|^MS_DEAD
+
+  - glossary: POP
+    path:
+    - Vital Events
+    name: Marriage
+    type: Business Object
+    definition: Event of two persons entering a legal union in front of a civil
+      registrar.
+    synonyms:
+    - 'FR: Mariage'
+    - 'NL: Huwelijk'
+    source_pattern: MARIAGE|MARRIAGE
+
+  - glossary: POP
+    path:
+    - Vital Events
+    name: Legal Cohabitation
+    type: Business Object
+    definition: Event of two persons declaring cohabitation to the municipality
+      under Belgian law.
+    synonyms:
+    - 'FR: Cohabitation légale'
+    - 'NL: Wettelijke samenwoning'
+    source_pattern: COHAB
+
+  - glossary: POP
+    path:
+    - Vital Events
+    name: Crude Birth Rate
+    type: Measure
+    definition: Number of live births in a year per 1,000 persons of the average
+      population of that year.
+    synonyms:
+    - 'FR: Taux brut de natalité'
+    - 'NL: Bruto geboortecijfer'
+    related:
+    - Population and Households.Vital Events.Birth
+    references:
+    - birth
+
+  - glossary: POP
+    path:
+    - Vital Events
+    name: Place of Death
+    type: Role
+    definition: Administrative area where a death occurred.
+    synonyms:
+    - 'FR: Lieu de décès'
+    - 'NL: Plaats van overlijden'
+    related:
+    - Shared Business Vocabulary.Location.Administrative Area
+
+  - glossary: POP
+    path: []
+    name: Names
+    type: Subject Area
+    definition: Grouping of the concepts that describe how frequently names
+      are borne in the population.
+
+  - glossary: POP
+    path:
+    - Names
+    name: Number of Name Bearers
+    type: Measure
+    definition: Number of persons in the resident population who bear a given
+      first name or family name.
+    synonyms:
+    - Name Frequency
+    - 'FR: Nombre de porteurs'
+    - 'NL: Aantal naamdragers'
+    related:
+    - Shared Business Vocabulary.Party.Person Name.First Name
+    - Shared Business Vocabulary.Party.Person Name.Family Name
+    references:
+    - family
+
+  - glossary: POP
+    path: []
+    name: Labour and Education
+    type: Subject Area
+    definition: Grouping of the concepts that describe the position of persons
+      on the labour market and their education.
+
+  - glossary: POP
+    path:
+    - Labour and Education
+    name: Current Activity Status
+    type: Classification
+    definition: 'Position of a person with respect to the labour market at the
+      reference date: employed, unemployed or inactive.'
+    synonyms:
+    - Labour Market Situation
+    - 'FR: Situation sur le marché de l''emploi'
+    - 'NL: Arbeidsmarktsituatie'
+    source_pattern: _CAS_
+
+  - glossary: POP
+    path:
+    - Labour and Education
+    name: Status in Employment
+    type: Classification
+    definition: Type of employment contract or arrangement of an employed person,
+      such as employee or self-employed.
+    synonyms:
+    - Professional Status
+    - 'FR: Statut professionnel'
+    - 'NL: Beroepsstatuut'
+    source_pattern: _SIE
+
+  - glossary: POP
+    path:
+    - Labour and Education
+    name: Educational Attainment
+    type: Classification
+    definition: Highest level of education a person has successfully completed.
+    synonyms:
+    - Highest Level of Education
+    - 'FR: Niveau d''instruction'
+    - 'NL: Onderwijsniveau'
+    related:
+    - Shared Business Vocabulary.Statistical Classifications.Field of Education
+    source_pattern: _EDU
+
+  - glossary: POP
+    path:
+    - Labour and Education
+    name: Place of Work
+    type: Role
+    definition: Administrative area where an employed person carries out the
+      main job.
+    synonyms:
+    - 'FR: Lieu de travail'
+    - 'NL: Plaats van tewerkstelling'
+    related:
+    - Shared Business Vocabulary.Location.Administrative Area
+    source_pattern: _WORK$|_POW_
+
+  - glossary: POP
+    path:
+    - Labour and Education
+    name: Employment Rate
+    type: Measure
+    definition: Share of employed persons in the population of the same age
+      group.
+    synonyms:
+    - 'FR: Taux d''emploi'
+    - 'NL: Werkzaamheidsgraad'
+
+  - glossary: POP
+    path:
+    - Labour and Education
+    name: Unemployment Rate
+    type: Measure
+    definition: Share of unemployed persons in the labour force of the same
+      age group.
+    synonyms:
+    - 'FR: Taux de chômage'
+    - 'NL: Werkloosheidsgraad'
+
+  - glossary: POP
+    path: []
+    name: Living Conditions
+    type: Subject Area
+    definition: Grouping of the concepts that describe income, poverty and deprivation
+      of households and persons.
+
+  - glossary: POP
+    path:
+    - Living Conditions
+    name: Net Taxable Income
+    type: Measure
+    definition: Total of the net incomes of a tax return that are subject to
+      personal income tax.
+    synonyms:
+    - 'FR: Revenu net imposable'
+    - 'NL: Netto belastbaar inkomen'
+    source_pattern: TAXABLE_INC
+
+  - glossary: POP
+    path:
+    - Living Conditions
+    name: At-Risk-of-Poverty or Social Exclusion Rate
+    type: Measure
+    definition: Share of persons who are at risk of poverty, severely materially
+      and socially deprived, or living in a household with very low work intensity.
+    synonyms:
+    - AROPE
+    - 'FR: Risque de pauvreté ou d''exclusion sociale'
+    - 'NL: Risico op armoede of sociale uitsluiting'
+
+  # ------------------------------------------------------------------
+  # Enterprises and Economy
+  # ------------------------------------------------------------------
+
+  - glossary: ENT
+    path: []
+    name: Enterprise
+    type: Subject Area
+    definition: Grouping of the concepts that describe enterprises active in
+      Belgium.
+
+  - glossary: ENT
+    path:
+    - Enterprise
+    name: VAT-Registered Enterprise
+    type: Business Object
+    definition: Natural or legal person registered as liable for value added
+      tax in Belgium.
+    synonyms:
+    - VAT Payer
+    - 'FR: Entreprise assujettie à la TVA'
+    - 'NL: Btw-plichtige onderneming'
+    related:
+    - Shared Business Vocabulary.Party.Organisation
+    - Shared Business Vocabulary.Party.Person
+    - Shared Business Vocabulary.Party.Party Type
+
+  - glossary: ENT
+    path:
+    - Enterprise
+    name: Independent Entrepreneur
+    type: Role
+    definition: Natural person who carries out a professional activity on own
+      account, without an employment contract.
+    synonyms:
+    - Self-Employed Person
+    - 'FR: Indépendant'
+    - 'NL: Zelfstandige'
+    related:
+    - Shared Business Vocabulary.Party.Person
+    - Shared Business Vocabulary.Party.Party Relationship
+    tags:
+    - PersonalData.Personal
+    steward_note: 'Not a new kind of party: a Person in the role of self-employed
+      operator of a business.'
+
+  - glossary: ENT
+    path:
+    - Enterprise
+    name: Main Economic Activity
+    type: Role
+    definition: Economic activity that contributes most to the value added of
+      an enterprise.
+    synonyms:
+    - Principal Activity
+    - 'FR: Activité principale'
+    - 'NL: Hoofdactiviteit'
+    related:
+    - Shared Business Vocabulary.Statistical Classifications.Economic Activity
+    source_pattern: NACE
+
+  - glossary: ENT
+    path:
+    - Enterprise
+    name: Registered Office Location
+    type: Role
+    definition: Administrative area of the registered office of an enterprise.
+    synonyms:
+    - Head Office Location
+    - 'FR: Siège social'
+    - 'NL: Maatschappelijke zetel'
+    related:
+    - Shared Business Vocabulary.Location.Administrative Area
+    - Shared Business Vocabulary.Location.Address
+    source_pattern: ^CD_REGION$
+
+  - glossary: ENT
+    path:
+    - Enterprise
+    name: Employer Size Class
+    type: Classification
+    definition: Classification of enterprises by the number of employees they
+      declare.
+    synonyms:
+    - Employee Size Class
+    - 'FR: Classe de travailleurs'
+    - 'NL: Werknemersklasse'
+    source_pattern: EMPLOYMENT_CLASS|EMPL_CLASS
+
+  - glossary: ENT
+    path: []
+    name: Enterprise Demography
+    type: Subject Area
+    definition: Grouping of the concepts that describe how the population of
+      enterprises changes over a period.
+
+  - glossary: ENT
+    path:
+    - Enterprise Demography
+    name: Active Enterprises at Start of Period
+    type: Measure
+    definition: Number of VAT-registered enterprises active on the first day
+      of the reference period.
+    synonyms:
+    - Stock at Beginning of Period
+    - 'FR: Assujettis en début de période'
+    related:
+    - Enterprises and Economy.Enterprise.VAT-Registered Enterprise
+    source_pattern: REGISTRATIONS_BOP
+
+  - glossary: ENT
+    path:
+    - Enterprise Demography
+    name: First Registrations
+    type: Measure
+    definition: Number of enterprises registered for VAT for the first time
+      during the reference period.
+    synonyms:
+    - Births of Enterprises
+    - 'FR: Primo-assujettissements'
+    - 'NL: Eerste aanmeldingen'
+    related:
+    - Enterprises and Economy.Enterprise.VAT-Registered Enterprise
+    source_pattern: FIRST_REGISTRATIONS
+
+  - glossary: ENT
+    path:
+    - Enterprise Demography
+    name: Re-registrations
+    type: Measure
+    definition: Number of enterprises registered again for VAT during the reference
+      period after an earlier deregistration.
+    synonyms:
+    - 'FR: Ré-assujettissements'
+    - 'NL: Heraanmeldingen'
+    related:
+    - Enterprises and Economy.Enterprise.VAT-Registered Enterprise
+    source_pattern: RE_REGISTRATIONS
+
+  - glossary: ENT
+    path:
+    - Enterprise Demography
+    name: Deregistrations
+    type: Measure
+    definition: Number of enterprises whose VAT registration ended during the
+      reference period.
+    synonyms:
+    - Closures
+    - 'FR: Radiations'
+    - 'NL: Schrappingen'
+    related:
+    - Enterprises and Economy.Enterprise.VAT-Registered Enterprise
+    source_pattern: DEREGISTRATIONS
+
+  - glossary: ENT
+    path:
+    - Enterprise Demography
+    name: Enterprise Inflows
+    type: Measure
+    definition: Number of enterprises that entered an activity, region or sector
+      during the reference period without a new registration.
+    synonyms:
+    - 'FR: Immigrations'
+    - 'NL: Immigraties'
+    related:
+    - Enterprises and Economy.Enterprise.VAT-Registered Enterprise
+    source_pattern: ^IMMIGRATIONS
+
+  - glossary: ENT
+    path:
+    - Enterprise Demography
+    name: Enterprise Outflows
+    type: Measure
+    definition: Number of enterprises that left an activity, region or sector
+      during the reference period without a deregistration.
+    synonyms:
+    - 'FR: Émigrations'
+    - 'NL: Emigraties'
+    related:
+    - Enterprises and Economy.Enterprise.VAT-Registered Enterprise
+    source_pattern: ^EMIGRATIONS
+
+  - glossary: ENT
+    path: []
+    name: Prices
+    type: Subject Area
+    definition: Grouping of the concepts that describe the change in prices
+      paid by households.
+
+  - glossary: ENT
+    path:
+    - Prices
+    name: Consumer Price Index
+    type: Measure
+    definition: Index that measures the change over time in the prices of a
+      fixed basket of goods and services bought by households.
+    synonyms:
+    - CPI
+    - 'FR: Indice des prix à la consommation'
+    - 'NL: Consumptieprijsindex'
+    related:
+    - Shared Business Vocabulary.Statistical Classifications.Product Category
+    source_pattern: CPI
+    references:
+    - cpi
+
+  - glossary: ENT
+    path:
+    - Prices
+    name: Health Index
+    type: Measure
+    definition: Consumer price index from which alcohol, tobacco and motor fuels
+      are excluded, used in Belgium to index wages and social benefits.
+    synonyms:
+    - 'FR: Indice santé'
+    - 'NL: Gezondheidsindex'
+    related:
+    - Enterprises and Economy.Prices.Consumer Price Index
+    references:
+    - cpi
+
+  - glossary: ENT
+    path:
+    - Prices
+    name: Harmonised Index of Consumer Prices
+    type: Measure
+    definition: Consumer price index computed with a method common to all EU
+      member states.
+    synonyms:
+    - HICP
+    - 'FR: IPCH'
+    - 'NL: GICP'
+    related:
+    - Enterprises and Economy.Prices.Consumer Price Index
+    source_pattern: HICP
+
+  - glossary: ENT
+    path:
+    - Prices
+    name: Inflation Rate
+    type: Measure
+    definition: Percentage change of the consumer price index compared with
+      the same period of the previous year.
+    synonyms:
+    - 'FR: Taux d''inflation'
+    - 'NL: Inflatie'
+    source_pattern: INFL
+
+  # ------------------------------------------------------------------
+  # Mobility and Road Safety
+  # ------------------------------------------------------------------
+
+  - glossary: MOB
+    path: []
+    name: Road Accident
+    type: Subject Area
+    definition: Grouping of the concepts that describe road accidents and their
+      circumstances.
+
+  - glossary: MOB
+    path:
+    - Road Accident
+    name: Injury Road Accident
+    type: Business Object
+    definition: Accident on a public road involving at least one moving vehicle
+      and causing at least one killed or injured person.
+    synonyms:
+    - Road Accident
+    - Traffic Accident
+    - 'FR: Accident de la circulation'
+    - 'NL: Verkeersongeval'
+    references:
+    - acc
+
+  - glossary: MOB
+    path:
+    - Road Accident
+    name: Accident Location
+    type: Role
+    definition: Administrative area, and when known the coordinates, where a
+      road accident happened.
+    synonyms:
+    - 'FR: Lieu de l''accident'
+    - 'NL: Plaats van het ongeval'
+    related:
+    - Shared Business Vocabulary.Location.Administrative Area
+    - Shared Business Vocabulary.Location.Geographic Coordinates
+    source_pattern: (MUNTY|PROV|REGION|RGN)_COLL
+
+  - glossary: MOB
+    path:
+    - Road Accident
+    name: Accident Date and Time
+    type: Characteristic
+    definition: Day, day of the week and hour at which a road accident happened.
+    synonyms:
+    - 'FR: Date et heure de l''accident'
+    - 'NL: Datum en tijdstip van het ongeval'
+    related:
+    - Shared Business Vocabulary.Time.Reference Period
+    source_pattern: ^DT_DAY$|^DT_HOUR|DAY_OF_WEEK|^DT_YEAR_COLL|^DT_MONTH_COLL|MONTH_COLLISION
+
+  - glossary: MOB
+    path:
+    - Road Accident
+    name: Collision Type
+    type: Classification
+    definition: Classification of a road accident by the way the parties collided,
+      such as head-on, rear-end or with a pedestrian.
+    synonyms:
+    - 'FR: Type de collision'
+    - 'NL: Type aanrijding'
+    source_pattern: COLL_TYPE|COLLISION_TYPE|COLLISON_TYPE
+
+  - glossary: MOB
+    path:
+    - Road Accident
+    name: Road Type
+    type: Classification
+    definition: Classification of the public road on which an accident happened,
+      such as motorway or local road.
+    synonyms:
+    - 'FR: Type de route'
+    - 'NL: Wegtype'
+    source_pattern: ROAD_TYPE
+
+  - glossary: MOB
+    path:
+    - Road Accident
+    name: Light Condition
+    type: Classification
+    definition: 'Classification of the lighting at the time of an accident:
+      daylight, dawn or dusk, night with or without lighting.'
+    synonyms:
+    - 'FR: Luminosité'
+    - 'NL: Lichtgesteldheid'
+    source_pattern: LIGHT_COND
+
+  - glossary: MOB
+    path:
+    - Road Accident
+    name: Road Condition
+    type: Classification
+    definition: Classification of the road surface at the time of an accident,
+      such as dry, wet or icy.
+    synonyms:
+    - 'FR: État de la route'
+    - 'NL: Toestand van het wegdek'
+    source_pattern: ROAD_CONDITION
+
+  - glossary: MOB
+    path:
+    - Road Accident
+    name: Built-up Area Indicator
+    type: Classification
+    definition: Indication of whether an accident happened inside or outside
+      a built-up area.
+    synonyms:
+    - 'FR: Agglomération'
+    - 'NL: Bebouwde kom'
+    source_pattern: BUILD_UP_AREA
+
+  - glossary: MOB
+    path: []
+    name: Road Casualty
+    type: Subject Area
+    definition: Grouping of the concepts that describe the persons involved
+      in road accidents.
+
+  - glossary: MOB
+    path:
+    - Road Casualty
+    name: Road Accident Victim
+    type: Business Object
+    definition: Person involved in an injury road accident, whether uninjured,
+      injured or killed.
+    synonyms:
+    - Casualty
+    - 'FR: Victime'
+    - 'NL: Slachtoffer'
+    related:
+    - Shared Business Vocabulary.Party.Person
+    references:
+    - cas
+
+  - glossary: MOB
+    path:
+    - Road Casualty
+    name: Injury Severity
+    type: Classification
+    definition: 'Classification of a victim by the seriousness of injuries:
+      uninjured, slightly injured, seriously injured, mortally injured, killed
+      on the spot or within 30 days.'
+    synonyms:
+    - 'FR: Gravité des blessures'
+    - 'NL: Ernst van de letsels'
+    source_pattern: ^MS_VIC_OK|_INJ$|^MS_DEAD
+    steward_note: Spread over 6 measure columns in the source; one classification
+      in the business model.
+
+  - glossary: MOB
+    path:
+    - Road Casualty
+    name: Number of Victims
+    type: Measure
+    definition: Number of persons involved in injury road accidents who share
+      the stated characteristics.
+    synonyms:
+    - 'FR: Nombre de victimes'
+    - 'NL: Aantal slachtoffers'
+    related:
+    - Mobility and Road Safety.Road Casualty.Road Accident Victim
+    source_pattern: ^MS_VCT|^MS_VICT
+
+  - glossary: MOB
+    path:
+    - Road Casualty
+    name: Victim Type
+    type: Classification
+    definition: 'Role of a victim in the accident: driver, passenger or other
+      person such as a pedestrian.'
+    synonyms:
+    - 'FR: Type de victime'
+    - 'NL: Type slachtoffer'
+    source_pattern: VCT_TYPE
+
+  - glossary: MOB
+    path:
+    - Road Casualty
+    name: Road User Type
+    type: Classification
+    definition: Means of travel of a road user at the time of the accident,
+      such as car, bicycle or on foot.
+    synonyms:
+    - 'FR: Type d''usager'
+    - 'NL: Type weggebruiker'
+    source_pattern: ROAD_USR
+
+  - glossary: MOB
+    path: []
+    name: Vehicle
+    type: Subject Area
+    definition: Grouping of the concepts that describe the vehicles involved
+      in road accidents.
+
+  - glossary: MOB
+    path:
+    - Vehicle
+    name: Vehicle Type
+    type: Classification
+    definition: Classification of a vehicle by its construction and use, such
+      as passenger car, lorry or motorcycle.
+    synonyms:
+    - 'FR: Type de véhicule'
+    - 'NL: Voertuigtype'
+    source_pattern: VEHICLE_TYPE|VEH_TYPE|_VHCL_TYPE
+
+  - glossary: MOB
+    path:
+    - Vehicle
+    name: Vehicle Age
+    type: Characteristic
+    definition: Number of full years between the first registration of a vehicle
+      and the date of the accident.
+    synonyms:
+    - 'FR: Âge du véhicule'
+    - 'NL: Leeftijd van het voertuig'
+    source_pattern: VEHICLE_AGE
+
+  # ------------------------------------------------------------------
+  # Buildings and Real Estate
+  # ------------------------------------------------------------------
+
+  - glossary: BRE
+    path: []
+    name: Building Stock
+    type: Subject Area
+    definition: Grouping of the concepts that describe the buildings and dwellings
+      registered in the land register.
+
+  - glossary: BRE
+    path:
+    - Building Stock
+    name: Building
+    type: Business Object
+    definition: Construction registered as a cadastral parcel with a built part,
+      used for housing or other purposes.
+    synonyms:
+    - 'FR: Bâtiment'
+    - 'NL: Gebouw'
+    related:
+    - Shared Business Vocabulary.Location.Address
+    source_pattern: BUILDING
+
+  - glossary: BRE
+    path:
+    - Building Stock
+    name: Building Type
+    type: Classification
+    definition: Classification of buildings by construction and use, such as
+      terraced house, detached house or apartment building.
+    synonyms:
+    - 'FR: Type de bâtiment'
+    - 'NL: Type gebouw'
+    source_pattern: _TOB_|BUILDING_TYPE
+
+  - glossary: BRE
+    path:
+    - Building Stock
+    name: Period of Construction
+    type: Classification
+    definition: Period in which the construction of a building was completed.
+    synonyms:
+    - Construction Period
+    - 'FR: Époque de construction'
+    - 'NL: Bouwperiode'
+    source_pattern: _POC_|^CD_POC
+
+  - glossary: BRE
+    path:
+    - Building Stock
+    name: Dwelling
+    type: Business Object
+    definition: Self-contained set of rooms intended for permanent residence
+      by one private household.
+    synonyms:
+    - Housing Unit
+    - 'FR: Logement'
+    - 'NL: Woning'
+    related:
+    - Population and Households.Household.Private Household
+    source_pattern: LOGEMENT|DWELL
+
+  - glossary: BRE
+    path:
+    - Building Stock
+    name: Number of Buildings
+    type: Measure
+    definition: Number of buildings that share the stated characteristics at
+      the reference date.
+    synonyms:
+    - 'FR: Nombre de bâtiments'
+    - 'NL: Aantal gebouwen'
+    source_pattern: ^MS_BUILDING
+
+  - glossary: BRE
+    path:
+    - Building Stock
+    name: Building Permit
+    type: Business Object
+    definition: Authorisation granted by the competent authority to build new
+      or renovate existing buildings.
+    synonyms:
+    - 'FR: Permis de bâtir'
+    - 'NL: Bouwvergunning'
+    related:
+    - Shared Business Vocabulary.Location.Administrative Area
+    - Shared Business Vocabulary.Time.Reference Period
+    source_pattern: _RES_NEW|_RES_RENOVATION|NONRES
+    steward_note: Source encodes purpose and type of works in the column names
+      (e.g. MS_BUILDING_RES_NEW).
+
+  - glossary: BRE
+    path: []
+    name: Real Estate Market
+    type: Subject Area
+    definition: Grouping of the concepts that describe sales of real estate.
+
+  - glossary: BRE
+    path:
+    - Real Estate Market
+    name: Real Estate Transaction
+    type: Business Object
+    definition: Sale of a property right on a real estate asset, registered
+      by the land registry.
+    synonyms:
+    - Property Sale
+    - 'FR: Vente immobilière'
+    - 'NL: Vastgoedverkoop'
+    related:
+    - Shared Business Vocabulary.Location.Administrative Area
+    - Shared Business Vocabulary.Time.Reference Period
+
+  - glossary: BRE
+    path:
+    - Real Estate Market
+    name: Real Estate Type
+    type: Classification
+    definition: Classification of a property sold, such as house, apartment,
+      villa or building land.
+    synonyms:
+    - Nature of the Property
+    - 'FR: Type de bien'
+    - 'NL: Type vastgoed'
+    source_pattern: ^CD_TYPE_|^CD_TYPE$
+
+  - glossary: BRE
+    path:
+    - Real Estate Market
+    name: Number of Transactions
+    type: Measure
+    definition: Number of real estate transactions that share the stated characteristics
+      during the reference period.
+    synonyms:
+    - 'FR: Nombre de transactions'
+    - 'NL: Aantal transacties'
+    source_pattern: TOTAL_TRANSACTIONS|NB_TRANSACTION
+
+  - glossary: BRE
+    path:
+    - Real Estate Market
+    name: Transaction Price
+    type: Measure
+    definition: Price paid for a real estate transaction, published as total,
+      mean or percentile, in euro or in euro per square metre for land.
+    synonyms:
+    - Sale Price
+    - 'FR: Prix de vente'
+    - 'NL: Verkoopprijs'
+    source_pattern: _PRICE|^MS_P\d\d
+
+  - glossary: BRE
+    path: []
+    name: Land
+    type: Subject Area
+    definition: Grouping of the concepts that describe land parcels and land
+      cover.
+
+  - glossary: BRE
+    path:
+    - Land
+    name: Parcel
+    type: Business Object
+    definition: Piece of land identified in the land register as a single unit
+      of ownership.
+    synonyms:
+    - Cadastral Parcel
+    - 'FR: Parcelle'
+    - 'NL: Perceel'
+    related:
+    - Shared Business Vocabulary.Location.Administrative Area
+    source_pattern: PARCEL|SURFACE
+
+  - glossary: BRE
+    path:
+    - Land
+    name: Parcel Surface Class
+    type: Classification
+    definition: Classification of parcels by their area in square metres.
+    synonyms:
+    - 'FR: Classe de superficie'
+    - 'NL: Oppervlakteklasse'
+    source_pattern: CLASS_SURFACE
+
+  - glossary: BRE
+    path:
+    - Land
+    name: Land Cover
+    type: Classification
+    definition: Classification of the surface of a parcel by what covers it,
+      such as built-up land, agricultural land or forest.
+    synonyms:
+    - Land Use
+    - 'FR: Occupation du sol'
+    - 'NL: Bodembezetting'
+    references:
+    - land
