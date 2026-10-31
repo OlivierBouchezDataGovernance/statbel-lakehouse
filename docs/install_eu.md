@@ -5,7 +5,11 @@ allow only personal, not-for-profit use without personal data. This guide moves 
 workspace on **Google Cloud, region `europe-west1` (Belgium)**, next to the BigQuery dataset (EU). The Free Edition
 can stay for trainings on aggregated open data only.
 
-Decided on 31 October 2026 by Olivier Bouchez. Governance documents that apply: Data Source and Combination Review
+Decided on 31 October 2026 by Olivier Bouchez. **Done on 31 October 2026:** the Marketplace subscription created the
+account *olivier bouchez data consulting* and a **serverless workspace in `europe-west3` (Frankfurt)**, Premium, with
+Databricks-managed storage, kept as the EU workspace: `https://8259553561530577.7.gcp.databricks.com` (catalog
+`workspace`, metastore `metastore_gcp_europe_west3`). Trial credit: 400 USD until 14 November 2026, then
+pay-as-you-go on the Google Cloud bill. Governance documents that apply: Data Source and Combination Review
 Procedure (DG-PRO-0045), Register of Processing Activities Standard (DG-STD-0043, finding F-01).
 
 ## What it costs (prices of 31 October 2026)
