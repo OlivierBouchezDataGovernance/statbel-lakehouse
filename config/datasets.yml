@@ -401,3 +401,135 @@ tables:
     primary_key: [CD_YEAR, CD_REFNIS, CD_STAT_TYPE, CD_BUILDING_TYPE]
     foreign_keys:
       - {column: CD_REFNIS, references: ref_municipality, referenced_column: CD_REFNIS}
+
+  # --------------------------------------------------------------------------
+  # Candidates of 31 October 2026 for the Belgian Context Layer and the
+  # Neighbourhood Insights product. Disabled until the review of the Data Source
+  # and Combination Review Procedure (DG-PRO-0045) is approved: inspection in
+  # docs/source_inspection.md, section "Candidates of 31 October 2026". Aggregated
+  # open data, no personal data; to be loaded in the EU workspace only
+  # (docs/install_eu.md).
+  # --------------------------------------------------------------------------
+  - table: bld_real_estate_sector
+    enabled: false
+    domain: bld
+    title: Real estate sales by statistical sector (prices Q10 to Q90)
+    period: multi-year
+    sources:
+      - url: https://statbel.fgov.be/sites/default/files/files/opendata/Immo%20sector/TF_IMMO_SECTOR.zip
+        separator: ";"
+    rename:
+      MS_P50_MEDIAN_PRICE: MS_P50        # "MS_P50 (MEDIAN_PRICE)" once sanitised
+    column_descriptions:
+      CD_STAT_SECTOR: Code of the statistical sector (code valid in the year of the sales)
+      CD_YEAR: Year of the deeds of sale
+      CD_TYPE: Type of property (code)
+      MS_TRANSACTIONS: Number of sales
+      MS_P10: 10th percentile of the price, in euro
+      MS_P25: 25th percentile of the price, in euro
+      MS_P50: Median price, in euro
+      MS_P75: 75th percentile of the price, in euro
+      MS_P90: 90th percentile of the price, in euro
+    primary_key: [CD_STAT_SECTOR, CD_YEAR, CD_TYPE]
+
+  - table: bld_real_estate_municipality
+    enabled: false
+    domain: bld
+    title: Real estate sales by administrative unit and quarter (prices Q25 to Q75)
+    period: multi-year
+    sources:
+      - url: https://statbel.fgov.be/sites/default/files/files/opendata/immo/vastgoed_2010_9999.zip
+    column_descriptions:
+      CD_REFNIS: REFNIS code of the administrative unit (level in CD_NIVEAU_REFNIS)
+      CD_PERIOD: Quarter (Q1 to Q4) or the whole year
+      CD_CLASS_SURFACE: Class of the surface of the parcel
+      MS_TOTAL_TRANSACTIONS: Number of sales
+      MS_P_50_MEDIAN: Median price, in euro
+    primary_key: [CD_YEAR, CD_PERIOD, CD_REFNIS, CD_TYPE_NL, CD_CLASS_SURFACE]
+
+  - table: mob_car_household_sector
+    enabled: false
+    domain: mob
+    title: Households and cars by statistical sector
+    period: 2017-2025
+    sources:
+      - url: https://statbel.fgov.be/sites/default/files/files/opendata/Aantal%20wagens%20per%20statistische%20sector/TF_CAR_HH_SECTOR_2017_2024.zip
+        separator: ";"
+    column_descriptions:
+      CD_YEAR: Reference year
+      CD_SECTOR: Code of the statistical sector
+      MS_TOT_HH: Number of private households
+      MS_TOT_CARS: Number of cars of the households (company cars included)
+    primary_key: [CD_YEAR, CD_SECTOR]
+
+  - table: mob_road_accident_history
+    enabled: false
+    domain: mob
+    title: Road accidents with casualties, 2017 to 2024
+    period: 2017-2024
+    sources:
+      - url: https://statbel.fgov.be/sites/default/files/files/opendata/Verkeersongevallen/TF_ACCIDENTS_2017.zip
+      - url: https://statbel.fgov.be/sites/default/files/files/opendata/Verkeersongevallen/TF_ACCIDENTS_2018.zip
+      - url: https://statbel.fgov.be/sites/default/files/files/opendata/Verkeersongevallen/TF_ACCIDENTS_2019.zip
+      - url: https://statbel.fgov.be/sites/default/files/files/opendata/Verkeersongevallen/TF_ACCIDENTS_2020.zip
+      - url: https://statbel.fgov.be/sites/default/files/files/opendata/Verkeersongevallen/TF_ACCIDENTS_2021.zip
+      - url: https://statbel.fgov.be/sites/default/files/files/opendata/Verkeersongevallen/TF_ACCIDENTS_2022.zip
+      - url: https://statbel.fgov.be/sites/default/files/files/opendata/Verkeersongevallen/TF_ACCIDENTS_2023.zip
+      - url: https://statbel.fgov.be/sites/default/files/files/opendata/Verkeersongevallen/TF_ACCIDENTS_2024.zip
+    types:
+      DT_HOUR: int                     # an hour of the day, not a date
+    dictionary: https://statbel.fgov.be/sites/default/files/files/opendata/Verkeersongevallen/TF_ACCIDENTS.xlsx
+    primary_key: [DT_DAY, DT_HOUR, CD_BUILD_UP_AREA, CD_COLL_TYPE,
+                  CD_LIGHT_COND, CD_ROAD_TYPE, CD_MUNTY_REFNIS]
+
+  - table: pop_census_household_size_sector
+    enabled: false
+    domain: pop
+    title: "Census 2021: private households by statistical sector and size"
+    period: "2021-01-01"
+    sources:
+      - url: https://statbel.fgov.be/sites/default/files/files/opendata/TF_CENSUS_2021/TF_CENSUS_2021_S17.zip
+    column_descriptions:
+      CD_SECTOR: Code of the statistical sector (2021)
+      CD_SPH: Size of the private household (code)
+      MS_MENAGES: Number of private households
+    primary_key: [CD_SECTOR, CD_SPH]
+
+  - table: pop_census_tenure_sector
+    enabled: false
+    domain: pop
+    title: "Census 2021: private households by statistical sector and tenure (owner, tenant)"
+    period: "2021-01-01"
+    sources:
+      - url: https://statbel.fgov.be/sites/default/files/files/opendata/TF_CENSUS_2021/TF_CENSUS_2021_S18.zip
+    column_descriptions:
+      CD_SECTOR: Code of the statistical sector (2021)
+      CD_TSH: Tenure status of the household (OWN, RENT, other)
+      MS_MENAGES: Number of private households
+    primary_key: [CD_SECTOR, CD_TSH]
+
+  - table: bld_census_dwelling_period_sector
+    enabled: false
+    domain: bld
+    title: "Census 2021: occupants of conventional dwellings by statistical sector and period of construction"
+    period: "2021-01-01"
+    sources:
+      - url: https://statbel.fgov.be/sites/default/files/files/opendata/TF_CENSUS_2021/TF_CENSUS_2021_S24C.zip
+    column_descriptions:
+      CD_SECTOR: Code of the statistical sector (2021)
+      CD_POC: Period of construction of the dwelling (code)
+      MS_POP: Number of occupants
+    primary_key: [CD_SECTOR, CD_POC]
+
+  - table: bld_census_dwelling_ownership_sector
+    enabled: false
+    domain: bld
+    title: "Census 2021: occupied conventional dwellings by statistical sector and ownership"
+    period: "2021-01-01"
+    sources:
+      - url: https://statbel.fgov.be/sites/default/files/files/opendata/TF_CENSUS_2021/TF_CENSUS_2021_S25A.zip
+    column_descriptions:
+      CD_SECTOR: Code of the statistical sector (2021)
+      CD_OWS: Ownership of the dwelling (DW_OWN occupied by the owner, DW_RENT rented, other)
+      MS_LOGEMENTS: Number of occupied dwellings
+    primary_key: [CD_SECTOR, CD_OWS]

@@ -52,3 +52,9 @@ targets:
   dev:
     mode: development
     default: true
+  # Databricks on Google Cloud, europe-west1 (Belgium): the data never leaves the EU. The host comes from the
+  # CLI profile "eu" (databricks auth login --host <workspace URL> --profile eu). See docs/install_eu.md.
+  eu:
+    mode: development
+    workspace:
+      profile: eu
