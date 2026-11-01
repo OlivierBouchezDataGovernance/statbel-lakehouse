@@ -198,15 +198,24 @@ def extract_zip(zip_path, extensions=(".txt", ".csv")):
             raise ValueError(
                 f"Expected one {extensions} file in {zip_path}: {data_files}"
             )
-        # Extracted on the local disk, then copied into the volume: on
-        # serverless, writing a large file (above ~100 MB) into a volume
-        # through the file system fails with "[Errno 5] Input/output error";
-        # dbutils.fs.cp goes through the Files API.
         with tempfile.TemporaryDirectory() as local_dir:
             local_path = archive.extract(data_files[0], local_dir)
             target_path = os.path.join(target_dir, data_files[0])
-            dbutils.fs.cp(f"file:{local_path}", target_path)
+            upload_to_volume(local_path, target_path)
     return target_path
+
+
+def upload_to_volume(local_path, target_path):
+    """Copy a file of the local disk into a volume with the Files API.
+
+    On serverless, writing a large file (above ~100 MB) into a volume through
+    the file system fails with "[Errno 5] Input/output error", and
+    dbutils.fs.cp refuses local paths: large files are written on the local
+    disk first, then uploaded.
+    """
+    from databricks.sdk import WorkspaceClient
+    with open(local_path, "rb") as source:
+        WorkspaceClient().files.upload(target_path, source, overwrite=True)
 
 
 def download_zip(url, landing_dir, extensions=(".txt", ".csv")):
@@ -250,10 +259,14 @@ def to_utf8(path):
     if encoding == "utf-8":
         return path
     target = f"{path}.utf8.txt"
-    with open(path, encoding=encoding, newline="") as source, \
-            open(target, "w", encoding="utf-8", newline="") as converted:
-        for line in source:
-            converted.write(line)
+    with tempfile.TemporaryDirectory() as local_dir:
+        local_path = os.path.join(local_dir, "converted.txt")
+        with open(path, encoding=encoding, newline="") as source, \
+                open(local_path, "w", encoding="utf-8",
+                     newline="") as converted:
+            for line in source:
+                converted.write(line)
+        upload_to_volume(local_path, target)
     print(f"Converted {encoding} -> UTF-8: {target}")
     return target
 
