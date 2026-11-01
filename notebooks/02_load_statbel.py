@@ -27,7 +27,7 @@
 
 # COMMAND ----------
 
-# MAGIC %pip install pyyaml openpyxl pyproj
+# MAGIC %pip install pyyaml openpyxl pyproj google-auth
 
 # COMMAND ----------
 

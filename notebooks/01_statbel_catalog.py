@@ -38,7 +38,7 @@
 
 # COMMAND ----------
 
-# MAGIC %pip install rdflib openpyxl pyyaml
+# MAGIC %pip install rdflib openpyxl pyyaml google-auth
 
 # COMMAND ----------
 

@@ -31,6 +31,10 @@ openmetadata:
 statbel:
   dcat_url: https://doc.statbel.be/publications/DCAT/DCAT_opendata_datasets.ttl
   user_agent: "Mozilla/5.0 (statbel-lakehouse)"
+  # Bucket of Google Cloud Storage holding a copy of the Statbel files, filled by
+  # scripts/mirror_statbel.py: for a compute without internet access (EU workspace
+  # serverless). Empty: the files are downloaded from Statbel.
+  mirror: ""
 
 licence:
   data_line: >-

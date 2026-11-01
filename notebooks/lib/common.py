@@ -30,6 +30,8 @@
 
 import codecs
 import datetime
+import json
+import tempfile
 import uuid
 import zipfile
 from urllib.parse import unquote
@@ -83,19 +85,94 @@ def download_file(url, landing_dir, file_name=None):
         Full path of the downloaded file.
     """
     os.makedirs(landing_dir, exist_ok=True)
-    response = requests.get(
-        url, headers={"User-Agent": USER_AGENT}, timeout=HTTP_TIMEOUT_SECONDS
-    )
-    response.raise_for_status()
-    if response.headers.get("Content-Type", "").startswith("text/html"):
-        raise ValueError(f"The server returned a web page, not a file: {url}")
+    if MIRROR:
+        content = mirror_get(url)
+    else:
+        response = requests.get(
+            url, headers={"User-Agent": USER_AGENT},
+            timeout=HTTP_TIMEOUT_SECONDS
+        )
+        response.raise_for_status()
+        if response.headers.get("Content-Type", "").startswith("text/html"):
+            raise ValueError(
+                f"The server returned a web page, not a file: {url}")
+        content = response.content
 
     file_name = file_name or unquote(url.rsplit("/", 1)[-1])
     file_path = os.path.join(landing_dir, file_name)
     with open(file_path, "wb") as target:
-        target.write(response.content)
-    print(f"Downloaded {file_path} ({len(response.content):,} bytes)")
+        target.write(content)
+    print(f"Downloaded {file_path} ({len(content):,} bytes)"
+          + (f" from the mirror gs://{MIRROR}" if MIRROR else ""))
     return file_path
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC ### Mirror in Google Cloud Storage
+# MAGIC
+# MAGIC When `statbel.mirror` (a bucket name) is set in environment.yml, the
+# MAGIC files are read from that bucket instead of Statbel: the serverless
+# MAGIC compute of the EU workspace reaches the Google APIs but not the public
+# MAGIC internet. `scripts/mirror_statbel.py` fills the bucket, object name
+# MAGIC `<host>/<decoded path>`, with the Last-Modified of Statbel in the
+# MAGIC metadata `source-last-modified`. Access with the key of the BigQuery
+# MAGIC service account (secret scope of environment.yml).
+
+# COMMAND ----------
+
+MIRROR = _environment_value("statbel", "mirror", "") or ""
+_MIRROR_TOKEN = {}
+
+
+def _mirror_headers():
+    """Authorization header for the GCS JSON API (service account key)."""
+    from google.oauth2 import service_account
+    import google.auth.transport.requests
+
+    credentials = _MIRROR_TOKEN.get("credentials")
+    if credentials is None:
+        secrets = load_environment()["secrets"]
+        info = json.loads(dbutils.secrets.get(scope=secrets["scope"],
+                                              key=secrets["bigquery_key"]))
+        credentials = service_account.Credentials.from_service_account_info(
+            info, scopes=["https://www.googleapis.com/auth/"
+                          "devstorage.read_only"])
+        _MIRROR_TOKEN["credentials"] = credentials
+    if not credentials.valid:
+        credentials.refresh(google.auth.transport.requests.Request())
+    return {"Authorization": f"Bearer {credentials.token}"}
+
+
+def _mirror_object_url(url):
+    from urllib.parse import quote, urlsplit
+    parts = urlsplit(url)
+    name = quote(parts.netloc + unquote(parts.path), safe="")
+    return f"https://storage.googleapis.com/storage/v1/b/{MIRROR}/o/{name}"
+
+
+def mirror_get(url):
+    """Content of a Statbel file, read from the mirror bucket."""
+    response = requests.get(_mirror_object_url(url) + "?alt=media",
+                            headers=_mirror_headers(),
+                            timeout=HTTP_TIMEOUT_SECONDS)
+    if response.status_code == 404:
+        raise FileNotFoundError(
+            f"Not in the mirror gs://{MIRROR}: {url} "
+            "(run scripts/mirror_statbel.py)")
+    response.raise_for_status()
+    return response.content
+
+
+def mirror_last_modified(url):
+    """Last-Modified of Statbel recorded in the mirror (string), or None."""
+    response = requests.get(_mirror_object_url(url),
+                            headers=_mirror_headers(), timeout=60)
+    if response.status_code == 404:
+        return None
+    response.raise_for_status()
+    return (response.json().get("metadata") or {}).get(
+        "source-last-modified") or None
 
 
 def extract_zip(zip_path, extensions=(".txt", ".csv")):
@@ -113,16 +190,23 @@ def extract_zip(zip_path, extensions=(".txt", ".csv")):
 
     target_dir = os.path.dirname(zip_path)
     with zipfile.ZipFile(zip_path) as archive:
-        archive.extractall(target_dir)
         data_files = [
             name for name in archive.namelist()
             if name.lower().endswith(tuple(extensions))
         ]
-    if len(data_files) != 1:
-        raise ValueError(
-            f"Expected one {extensions} file in {zip_path}: {data_files}"
-        )
-    return os.path.join(target_dir, data_files[0])
+        if len(data_files) != 1:
+            raise ValueError(
+                f"Expected one {extensions} file in {zip_path}: {data_files}"
+            )
+        # Extracted on the local disk, then copied into the volume: on
+        # serverless, writing a large file (above ~100 MB) into a volume
+        # through the file system fails with "[Errno 5] Input/output error";
+        # dbutils.fs.cp goes through the Files API.
+        with tempfile.TemporaryDirectory() as local_dir:
+            local_path = archive.extract(data_files[0], local_dir)
+            target_path = os.path.join(target_dir, data_files[0])
+            dbutils.fs.cp(f"file:{local_path}", target_path)
+    return target_path
 
 
 def download_zip(url, landing_dir, extensions=(".txt", ".csv")):

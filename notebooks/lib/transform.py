@@ -145,16 +145,25 @@ def load_bronze(table):
 # MAGIC | last load failed | a `load_failed` after the last `rows_silver` |
 # MAGIC | source changed | a URL of `datasets.yml` not loaded in the last successful run |
 # MAGIC | file updated | `Last-Modified` of the file (HTTP HEAD) after the last successful load |
-# MAGIC | server unreachable | the HEAD request fails: the table is kept, the load reports the error |
+# MAGIC | server unreachable | the HEAD request (or the mirror) fails: the table is kept, the load reports the error |
+# MAGIC
+# MAGIC With a mirror (`statbel.mirror`), "file updated" compares the Last-Modified
+# MAGIC that `scripts/mirror_statbel.py` recorded: run it before the catch-up job.
 
 # COMMAND ----------
 
 def _source_modified(url):
-    """Last-Modified of a source file (UTC datetime), None if not given."""
-    response = requests.head(url, headers={"User-Agent": USER_AGENT},
-                             timeout=60, allow_redirects=True)
-    response.raise_for_status()
-    value = response.headers.get("Last-Modified")
+    """Last-Modified of a source file (UTC datetime), None if not given.
+
+    Read from the mirror bucket when statbel.mirror is set (the copy of the
+    file there carries the Last-Modified of Statbel)."""
+    if MIRROR:
+        value = mirror_last_modified(url)
+    else:
+        response = requests.head(url, headers={"User-Agent": USER_AGENT},
+                                 timeout=60, allow_redirects=True)
+        response.raise_for_status()
+        value = response.headers.get("Last-Modified")
     if not value:
         return None
     from email.utils import parsedate_to_datetime
