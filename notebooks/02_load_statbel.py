@@ -20,6 +20,8 @@
 # MAGIC
 # MAGIC **Widget `tables`:** `enabled` (default), `all`, or a list such as
 # MAGIC `ref_municipality, ref_first_name`.
+# MAGIC `stale`: only the enabled tables that are not up to date (never
+# MAGIC loaded, last load failed, source or file changed since the last load).
 # MAGIC
 # MAGIC © 2026 Olivier Bouchez · CC BY-NC 4.0 · https://olivier-bouchez.com
 
@@ -37,9 +39,17 @@
 
 # COMMAND ----------
 
-dbutils.widgets.text("tables", "enabled", "Tables (enabled, all, or list)")
+dbutils.widgets.text("tables", "enabled",
+                     "Tables (enabled, all, stale, or list)")
 ALL_TABLES = load_datasets()
-SELECTED = select_tables(dbutils.widgets.get("tables"), ALL_TABLES)
+SELECTION = dbutils.widgets.get("tables").strip()
+if SELECTION == "stale":
+    SELECTED = stale_tables(ALL_TABLES)
+else:
+    SELECTED = select_tables(SELECTION, ALL_TABLES)
+# The tasks tags and publish of the job read this list in the mode stale.
+dbutils.jobs.taskValues.set("loaded",
+                            ",".join(t["table"] for t in SELECTED))
 print(f"Run {RUN_ID}: {len(SELECTED)} table(s):",
       ", ".join(t["table"] for t in SELECTED))
 

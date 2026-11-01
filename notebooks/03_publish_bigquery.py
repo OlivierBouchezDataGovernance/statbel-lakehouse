@@ -37,14 +37,24 @@
 
 # COMMAND ----------
 
-dbutils.widgets.text("tables", "enabled", "Tables (enabled, all, or list)")
+dbutils.widgets.text("tables", "enabled",
+                     "Tables (enabled, all, stale, or list)")
 dbutils.widgets.dropdown("allow_large", "false", ["false", "true"],
                          "Publish tables above the size limit")
 ALL_TABLES = load_datasets()
-SELECTED = [
-    t for t in select_tables(dbutils.widgets.get("tables"), ALL_TABLES)
-    if table_exists(f"silver_{t['table']}")
-]
+SELECTION = dbutils.widgets.get("tables").strip()
+if SELECTION == "stale":
+    # The tables reloaded by the task load, and the enabled tables that
+    # are not in BigQuery yet (a publication that failed or never ran).
+    loaded = dbutils.jobs.taskValues.get("load", "loaded", default="",
+                                         debugValue="")
+    loaded = {name for name in loaded.split(",") if name}
+    present = published_tables()
+    CANDIDATES = [t for t in ALL_TABLES if t["table"] in loaded
+                  or (t["enabled"] and t["table"] not in present)]
+else:
+    CANDIDATES = select_tables(SELECTION, ALL_TABLES)
+SELECTED = [t for t in CANDIDATES if table_exists(f"silver_{t['table']}")]
 ALLOW_LARGE = dbutils.widgets.get("allow_large") == "true"
 print(f"Run {RUN_ID}: publishing to {PROJECT_ID}.{DATASET} ({LOCATION}):",
       ", ".join(t["table"] for t in SELECTED))
