@@ -25,6 +25,7 @@ explicit list (`ref_municipality, ref_first_name`) or `all`.
       - url: https://statbel.fgov.be/.../OPENDATA_SECTOREN_2025_NEW.zip
         # format: zip_text (default) | zip_geojson
         # separator: "|" (default)
+        # multiline: true               # quoted values with line breaks (RFC 4180)
         # constants: {CD_SEX: F}         # columns added to this source
     rename:                              # after sanitising the names
       OPPERVLAKKTE_IN_HM: MS_TOT_SUR

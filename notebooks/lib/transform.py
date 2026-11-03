@@ -123,7 +123,8 @@ def load_bronze(table):
             raw = read_geojson(path)
         elif source["format"] == "zip_text":
             path = download_zip(source["url"], landing_dir)
-            raw = read_statbel_text(path, source["separator"])
+            raw = read_statbel_text(path, source["separator"],
+                                   source.get("multiline", False))
         else:
             raise ValueError(f"{table['table']}: unknown format "
                              f"{source['format']}")

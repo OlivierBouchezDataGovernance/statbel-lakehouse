@@ -14,6 +14,7 @@
 #     format         zip_text (zip with one delimited text file, default)
 #                    or zip_geojson (zip with one GeoJSON file)
 #     separator      field separator of text files (default "|")
+#     multiline      true: quoted values hold line breaks and doubled quotes
 #     constants      columns added to every row of this source
 #   rename           {sanitised source name: new name}, for invalid names
 #   types            {column: string|int|bigint|double|date|boolean}
@@ -466,6 +467,7 @@ tables:
       # (TF_CAR_HH_SECTOR_2017_2025.txt inside, checked on 3 November 2026)
       - url: https://statbel.fgov.be/sites/default/files/files/opendata/Aantal%20wagens%20per%20statistische%20sector/TF_CAR_HH_SECTOR_2017_2024.zip
         separator: ";"
+        multiline: true                # sector names in quotes with line breaks
     column_descriptions:
       CD_YEAR: Reference year
       CD_SECTOR: Code of the statistical sector (code valid in the reference year)

@@ -40,7 +40,7 @@ TABLE_KEYS = {
     "column_descriptions", "primary_key", "foreign_keys", "geography",
     "personal_data",
 }
-SOURCE_KEYS = {"url", "format", "separator", "constants"}
+SOURCE_KEYS = {"url", "format", "separator", "multiline", "constants"}
 
 
 def table_name(name):
