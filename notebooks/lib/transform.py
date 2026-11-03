@@ -123,7 +123,8 @@ def load_bronze(table):
             raw = read_geojson(path)
         elif source["format"] == "zip_text":
             path = download_zip(source["url"], landing_dir)
-            raw = read_statbel_text(path, source["separator"])
+            raw = read_statbel_text(path, source["separator"],
+                                   source.get("multiline", False))
         else:
             raise ValueError(f"{table['table']}: unknown format "
                              f"{source['format']}")
@@ -333,6 +334,15 @@ def build_silver(table):
         df = df.filter(F.col(table["keep_latest"]) == latest)
         report(table["table"], "kept_latest", 1,
                f"{table['keep_latest']} = {latest}")
+    if table.get("drop_duplicates"):
+        # rows repeated identically in the Statbel files: one copy is kept
+        before = df.count()
+        df = df.dropDuplicates()
+        dropped = before - df.count()
+        report(table["table"], "duplicate_rows_dropped", dropped,
+               "identical rows in the Statbel files")
+        if dropped:
+            print(f"{table['table']}: {dropped:,} duplicate row(s) dropped")
 
     measures = [c for c in df.columns
                 if c.startswith("MS_") and c not in table["types"]]

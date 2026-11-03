@@ -277,18 +277,22 @@ def to_utf8(path):
 
 # COMMAND ----------
 
-def read_statbel_text(path, separator="|"):
+def read_statbel_text(path, separator="|", multiline=False):
     """Read a delimited Statbel file: header row, all columns as text.
 
     The file is first converted to UTF-8 if needed (see to_utf8()).
+    multiline: quoted values may hold line breaks and doubled quotes
+    (RFC 4180); slower, so only for the sources that need it.
     """
-    return (
+    reader = (
         spark.read
         .option("header", True)
         .option("sep", separator)
         .option("encoding", "UTF-8")
-        .csv(to_utf8(path))
     )
+    if multiline:
+        reader = reader.option("multiLine", True).option("escape", '"')
+    return reader.csv(to_utf8(path))
 
 
 def add_lineage_columns(df, source_url):

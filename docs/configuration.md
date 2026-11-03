@@ -25,6 +25,7 @@ explicit list (`ref_municipality, ref_first_name`) or `all`.
       - url: https://statbel.fgov.be/.../OPENDATA_SECTOREN_2025_NEW.zip
         # format: zip_text (default) | zip_geojson
         # separator: "|" (default)
+        # multiline: true               # quoted values with line breaks (RFC 4180)
         # constants: {CD_SEX: F}         # columns added to this source
     rename:                              # after sanitising the names
       OPPERVLAKKTE_IN_HM: MS_TOT_SUR
@@ -32,6 +33,7 @@ explicit list (`ref_municipality, ref_first_name`) or `all`.
       TOTAL: bigint
     # filter: "DT_VLDT_END = '31/12/9999'"   # SQL on the raw text values
     # keep_latest: CD_YEAR                   # only the highest value
+    # drop_duplicates: true                  # one copy of identical rows (count in run_report)
     dictionary: https://statbel.fgov.be/.../Columns%20description2020.xlsx
     dictionary_aliases:                  # column -> name in the dictionary
       TOTAL: POPULATION
