@@ -72,3 +72,26 @@ databricks bundle run statbel_pipeline -t eu --params catalog=<catalog>,schema=s
 - Point the OpenMetadata Unity Catalog connector to the new workspace if it should be harvested.
 - Never load personal data (names, addresses) in the Free Edition again; the address file is loaded only after the
   approval of the DPIA DG-DOC-0048.
+
+## 5. The Statbel mirror (Cloud Storage) and its daily copy from the VM
+
+The serverless compute of this workspace reaches the Google APIs, PyPI and GitHub, but not `statbel.fgov.be` (DNS
+refused; changing the serverless network policy needs the Enterprise tier). The pipeline therefore reads the Statbel
+files from a bucket in the EU, `gs://strong-aegis-512509-r4-statbel-landing` (europe-west3), when `statbel.mirror`
+is set in `environment.yml`. `scripts/mirror_statbel.py` fills it; a file whose `Last-Modified` has not changed at
+Statbel is not copied again. Each run leaves a log `_runs/<UTC time>.json` in the bucket (outcome and SHA-256 of
+every file copied).
+
+Decided on 3 November 2026 (Jira LAB-39): the VM copies the new files every day, at the first boot of the day
+(`deploy/vm/statbel-mirror.timer`: `OnCalendar=daily`, `Persistent=true`, like `gdq-sync`). It copies only the
+tables with `enabled: true` (`--enabled-only`): the address file and the candidate tables are refreshed only by hand,
+after their review (DG-PRO-0045, DPIA DG-DOC-0048).
+
+1. Right of the VM account on this bucket only (the owner, once):
+   ```bash
+   gcloud storage buckets add-iam-policy-binding gs://strong-aegis-512509-r4-statbel-landing \
+     --member=serviceAccount:gdq-runner@strong-aegis-512509-r4.iam.gserviceaccount.com --role=roles/storage.objectUser
+   ```
+2. On the VM, from a copy of this repository: `bash deploy/vm/install.sh`, then `systemctl start statbel-mirror`
+   and `journalctl -u statbel-mirror -n 50`.
+3. After a copy, run the job `statbel-catchup` (`tables=stale`): it reloads only the tables whose file changed.

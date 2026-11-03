@@ -1,0 +1,10 @@
+[Unit]
+Description=Daily copy of the new Statbel files to the GCS mirror; caught up at boot (the VM is often off)
+
+[Timer]
+OnBootSec=15min
+OnCalendar=daily
+Persistent=true
+
+[Install]
+WantedBy=timers.target

@@ -14,11 +14,19 @@ Object name: <host>/<path of the URL, decoded>, e.g. statbel.fgov.be/sites/defau
 Metadata of each object: source-url and source-last-modified (Last-Modified of Statbel), used by the catch-up
 job (tables = stale). A file whose Last-Modified has not changed is not copied again.
 
-Authentication: Application Default Credentials (gcloud auth application-default login) with write access to the
-bucket. No key in this repository.
+Each run writes a log in the bucket, `_runs/<UTC time>.json`: every file with its outcome, and the SHA-256 of
+the files copied (provenance of the data). The exit code is 1 when a file failed.
+
+Authentication: Application Default Credentials (gcloud auth application-default login, or the service account
+of the VM) with write access to the bucket. No key in this repository.
 
     python scripts/mirror_statbel.py --bucket strong-aegis-512509-r4-statbel-landing
     python scripts/mirror_statbel.py --bucket ... --only-config      # without the DCAT dictionaries
+    python scripts/mirror_statbel.py --bucket ... --enabled-only     # only the tables with enabled: true
+
+The VM runs it every day (deploy/vm/statbel-mirror.*, see docs/install_eu.md) with --enabled-only, so the files
+of the tables not yet approved (the address file, the candidates of DG-PRO-0045) are never refreshed by
+themselves.
 
 © 2026 Olivier Bouchez · CC BY-NC 4.0 · https://olivier-bouchez.com
 """
@@ -26,8 +34,11 @@ bucket. No key in this repository.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
+import socket
 import sys
+from datetime import datetime, timezone
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from urllib.parse import quote, unquote, urlsplit
@@ -80,10 +91,12 @@ class Bucket:
         r.raise_for_status()
 
 
-def config_urls() -> list[str]:
+def config_urls(enabled_only: bool = False) -> list[str]:
     content = yaml.safe_load((ROOT / "config" / "datasets.yml").read_text(encoding="utf-8"))
     urls = []
     for table in content["tables"]:
+        if enabled_only and not table.get("enabled"):
+            continue
         urls += [s["url"] for s in table.get("sources") or [] if str(s.get("url", "")).startswith("http")]
         if str(table.get("dictionary", "")).startswith("http"):
             urls.append(table["dictionary"])
@@ -102,24 +115,26 @@ def dcat_dictionaries(ttl: bytes) -> list[str]:
             if str(page).rsplit(".", 1)[-1].lower() in ("xlsx", "xls")]
 
 
-def mirror(bucket: Bucket, url: str) -> str:
-    """Copies one file if Statbel has a newer one; returns the outcome."""
+def mirror(bucket: Bucket, url: str) -> dict:
+    """Copies one file if Statbel has a newer one; returns its line of the run log."""
     name = object_name(url)
+    entry = {"url": url, "object": name}
     try:
         head = requests.head(url, headers={"User-Agent": USER_AGENT}, timeout=60, allow_redirects=True)
         modified = head.headers.get("Last-Modified", "") if head.ok else ""
         current = bucket.metadata(name)
         if current is not None and modified and current.get("source-last-modified") == modified:
-            return "unchanged"
+            return {**entry, "outcome": "unchanged", "last_modified": modified}
         r = requests.get(url, headers={"User-Agent": USER_AGENT}, timeout=600)
         r.raise_for_status()
         if r.headers.get("Content-Type", "").startswith("text/html"):
-            return "error: the server returned a web page"
+            return {**entry, "outcome": "error: the server returned a web page"}
         modified = r.headers.get("Last-Modified", modified)
         bucket.upload(name, r.content, {"source-url": url, "source-last-modified": modified})
-        return "copied"
+        return {**entry, "outcome": "copied", "last_modified": modified, "bytes": len(r.content),
+                "sha256": hashlib.sha256(r.content).hexdigest()}
     except Exception as error:  # noqa: BLE001 - one file must not stop the others
-        return f"error: {type(error).__name__}: {str(error)[:200]}"
+        return {**entry, "outcome": f"error: {type(error).__name__}: {str(error)[:200]}"}
 
 
 def main() -> int:
@@ -127,27 +142,36 @@ def main() -> int:
     parser.add_argument("--bucket", required=True)
     parser.add_argument("--dcat-url", default=DCAT_URL)
     parser.add_argument("--only-config", action="store_true", help="skip the dictionaries of the DCAT catalog")
+    parser.add_argument("--enabled-only", action="store_true", help="only the tables with enabled: true")
     args = parser.parse_args()
 
+    started = datetime.now(timezone.utc)
     bucket = Bucket(args.bucket)
-    print(f"{args.dcat_url}: {mirror(bucket, args.dcat_url)}")
-    urls = config_urls()
+    results = [mirror(bucket, args.dcat_url)]
+    print(f"{args.dcat_url}: {results[0]['outcome']}")
+    urls = config_urls(args.enabled_only)
     if not args.only_config:
         ttl = requests.get(args.dcat_url, headers={"User-Agent": USER_AGENT}, timeout=300).content
         urls += dcat_dictionaries(ttl)
     urls = sorted(set(urls) - {args.dcat_url})
 
     with ThreadPoolExecutor(max_workers=8) as pool:
-        results = list(pool.map(lambda u: (u, mirror(bucket, u)), urls))
-    errors = [(u, r) for u, r in results if r.startswith("error")]
-    for u, r in errors:
-        print(f"{r}: {u}")
+        results += list(pool.map(lambda u: mirror(bucket, u), urls))
     counts = {}
-    for _, r in results:
-        key = r.split(":")[0]
+    for r in results:
+        key = r["outcome"].split(":")[0]
         counts[key] = counts.get(key, 0) + 1
-    print(f"{len(urls)} files: {counts}")
-    return 0
+        if key != "unchanged":
+            print(f"{r['outcome']}: {r['url']}")
+    print(f"{len(results)} files: {counts}")
+
+    log = {"started": started.isoformat(timespec="seconds"),
+           "finished": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+           "host": socket.gethostname(), "enabled_only": args.enabled_only, "only_config": args.only_config,
+           "counts": counts, "files": results}
+    bucket.upload(f"_runs/{started.strftime('%Y%m%dT%H%M%SZ')}.json",
+                  json.dumps(log, indent=1).encode(), {"counts": json.dumps(counts)})
+    return 1 if counts.get("error") else 0
 
 
 if __name__ == "__main__":
