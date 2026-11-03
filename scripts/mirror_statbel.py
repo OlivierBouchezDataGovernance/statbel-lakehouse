@@ -15,7 +15,8 @@ Metadata of each object: source-url and source-last-modified (Last-Modified of S
 job (tables = stale). A file whose Last-Modified has not changed is not copied again.
 
 Each run writes a log in the bucket, `_runs/<UTC time>.json`: every file with its outcome, and the SHA-256 of
-the files copied (provenance of the data). The exit code is 1 when a file failed.
+the files copied (provenance of the data). The exit code is 1 when the DCAT catalog or a file of config/datasets.yml
+failed (a broken dictionary link of the DCAT catalog is only logged).
 
 Authentication: Application Default Credentials (gcloud auth application-default login, or the service account
 of the VM) with write access to the bucket. No key in this repository.
@@ -150,6 +151,7 @@ def main() -> int:
     results = [mirror(bucket, args.dcat_url)]
     print(f"{args.dcat_url}: {results[0]['outcome']}")
     urls = config_urls(args.enabled_only)
+    required = {args.dcat_url, *urls}
     if not args.only_config:
         ttl = requests.get(args.dcat_url, headers={"User-Agent": USER_AGENT}, timeout=300).content
         urls += dcat_dictionaries(ttl)
@@ -171,7 +173,9 @@ def main() -> int:
            "counts": counts, "files": results}
     bucket.upload(f"_runs/{started.strftime('%Y%m%dT%H%M%SZ')}.json",
                   json.dumps(log, indent=1).encode(), {"counts": json.dumps(counts)})
-    return 1 if counts.get("error") else 0
+    # a broken link of the DCAT catalog (dictionary missing at Statbel) is logged, not fatal: only the files the
+    # pipeline loads make the run fail
+    return 1 if any(r["outcome"].startswith("error") and r["url"] in required for r in results) else 0
 
 
 if __name__ == "__main__":
