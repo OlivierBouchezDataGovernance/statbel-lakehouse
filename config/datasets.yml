@@ -91,6 +91,27 @@ tables:
     foreign_keys:
       - {column: CD_SUP_REFNIS, references: ref_municipality, referenced_column: CD_REFNIS}
 
+  - table: ref_municipality_history
+    enabled: true
+    domain: ref
+    title: Belgian administrative units with all their validity periods (REFNIS history)
+    period: "2025-01-01"
+    sources:
+      - url: https://statbel.fgov.be/sites/default/files/files/opendata/REFNIS%20code/TU_COM_REFNIS-20250101.zip
+    # Same file as ref_municipality, without its filter: the units ended by the mergers (1977, 2019, 2024-12-01,
+    # 2025) are kept with their end date. Needed by the rules of DG-STD-0016 v1.1 (sector code of a merged
+    # municipality) and DG-STD-0018 v1.1 (bankruptcies coded in REFNIS 2024), GAP-REFNIS-HISTORY (LAB-285, LAB-287).
+    column_descriptions:
+      CD_REFNIS: REFNIS code of the administrative unit (not unique; one row per validity period)
+      CD_SUP_REFNIS: REFNIS code of the parent unit during this period (NULL for regions)
+      LVL_REFNIS: "Level: 1 region, 2 province, 3 district, 4 municipality"
+      TX_REFNIS_FR: Name of the administrative unit in French
+      TX_REFNIS_NL: Name of the administrative unit in Dutch
+      TX_REFNIS_DE: Name of the administrative unit in German
+      DT_VLDT_START: First day of validity of the unit
+      DT_VLDT_END: "Last day of validity of the unit (9999-12-31: still valid)"
+    primary_key: [CD_REFNIS, DT_VLDT_START]
+
   - table: ref_nuts_lau
     enabled: true
     domain: ref
