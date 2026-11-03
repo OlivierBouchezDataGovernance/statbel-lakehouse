@@ -35,7 +35,8 @@ ENVIRONMENT_FILE = f"{CONFIG_VOLUME}/environment.yml"
 
 TABLE_KEYS = {
     "table", "enabled", "domain", "title", "period", "sources", "rename",
-    "types", "filter", "keep_latest", "dictionary", "dictionary_aliases",
+    "types", "filter", "keep_latest", "drop_duplicates", "dictionary",
+    "dictionary_aliases",
     "column_descriptions", "primary_key", "foreign_keys", "geography",
     "personal_data",
 }

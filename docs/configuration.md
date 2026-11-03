@@ -32,6 +32,7 @@ explicit list (`ref_municipality, ref_first_name`) or `all`.
       TOTAL: bigint
     # filter: "DT_VLDT_END = '31/12/9999'"   # SQL on the raw text values
     # keep_latest: CD_YEAR                   # only the highest value
+    # drop_duplicates: true                  # one copy of identical rows (count in run_report)
     dictionary: https://statbel.fgov.be/.../Columns%20description2020.xlsx
     dictionary_aliases:                  # column -> name in the dictionary
       TOTAL: POPULATION

@@ -97,3 +97,38 @@ Other naming issues to handle in silver (names kept, only invalid ones changed):
 4. **`ref_statistical_sector`**: use the GeoJSON only (it already holds the names in FR/NL/DE)
    and skip `Nis9_Nis6_refnis_names_01012026.xlsx` **(recommended)**?
 5. **`ref_country`**: URL of the EU Vocabularies *Country* table, to confirm before use.
+
+## 6. Candidates of 31 October 2026
+
+Review of the 8 candidate tables under the Data Source and Combination Review Procedure (DG-PRO-0045), step 2
+(inspection by the Data Steward), done on 3 November 2026 on the files of the EU mirror. Licence: Statbel open data,
+CC BY 4.0 (attribution, link to the licence, changes indicated; no endorsement). Retention: category "Statbel
+aggregated statistics" of DG-STD-0044. Register: annex B of DG-STD-0043 (no personal data), reservation R-08.
+
+| Table | Rows | Key | Findings |
+|---|---|---|---|
+| `bld_real_estate_sector` | 499 838 | unique | 2013–2024. Prices empty under 16 sales (94 % of rows). Sector codes of the year of the sales (52–54 % in the 2026 sectors until 2023, 98 % in 2024). `B00A` = `B001` + `B002`. |
+| `bld_real_estate_municipality` | 286 120 | unique | 2010–2025 complete, 2026 partial (Q1, Q2, S1). Periods (Q, S, Y) and REFNIS levels 1–5 overlap: filter on one of each. Key on the label `CD_TYPE_NL` (no type code). REFNIS 2025; `01000` is an orphan. |
+| `mob_car_household_sector` | 179 143 | unique | The zip is named 2017_2024 but holds 2017–2025. 8 131 rows of 1 to 4 households (2 646 of 1) publish the exact number of cars. 29 municipality codes before the 2025 mergers. |
+| `mob_road_accident_history` | 288 107 | unique once the 2018 duplicate is dropped | 2017–2024, same 35 columns as `mob_road_accident`. TF_ACCIDENTS_2018 repeats one row identically (dropped at load, `drop_duplicates`). "." kept as a code value in `CD_` columns. 29 municipality codes before the 2025 mergers. |
+| `pop_census_household_size_sector` | 122 553 | unique | Census 2021, sector codes of 2021 (54 % in the 2026 sectors). Zeros are not written. 147 sectors with one household. |
+| `pop_census_tenure_sector` | 38 526 | unique | `CD_TSH` = OWN or RENT only. 1 032 sectors 100 % owners or 100 % tenants. |
+| `bld_census_dwelling_period_sector` | 177 398 | unique | 11 periods and UNK. 26 303 rows of 1 to 4 occupants. |
+| `bld_census_dwelling_ownership_sector` | 38 515 | unique | `CD_OWS` = DW_OWN or DW_RENT only. |
+
+Combination risk: the census tables and the cars, joined at sector level with the sector geometry, give a profile of
+a single household in 140 sectors (size, tenure, period of construction, cars). Statbel masks incomes under 21 tax
+returns but publishes these counts from 1, and its disclosure control for the census 2021 is not documented.
+
+Decisions of the Data Owner (Olivier Bouchez, 3 November 2026):
+
+1. Measure M-01 of DPIA DG-DOC-0048 is extended: a sector with fewer than 100 inhabitants or fewer than 5 households
+   is served at municipality level, for every indicator by sector (data contract and `indicators.yaml` of the
+   Belgian Context Layer).
+2. Census 2021: loaded now, served by sector only above that threshold.
+3. Cars per household, ownership rate and median prices: `monitoring_only` (DG-GDL-0047), no pricing use.
+4. Sector codes of the year are kept; no 2021/2023 → 2026 correspondence for now (DG-STD-0046).
+5. The 2018 duplicate accident row is dropped at load and counted in `run_report` (`duplicate_rows_dropped`).
+6. Configuration fixed: car file period, census categories, this section, REFNIS foreign keys.
+7. The rest of the procedure (request, DPO screening, CISO check, decision) is recorded in Promulga; the tables are
+   loaded in the EU workspace only.
