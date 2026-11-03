@@ -418,7 +418,7 @@ tables:
   # workspace only (docs/install_eu.md).
   # --------------------------------------------------------------------------
   - table: bld_real_estate_sector
-    enabled: false
+    enabled: true
     domain: bld
     title: Real estate sales by statistical sector (prices Q10 to Q90)
     period: multi-year
@@ -440,7 +440,7 @@ tables:
     primary_key: [CD_STAT_SECTOR, CD_YEAR, CD_TYPE]
 
   - table: bld_real_estate_municipality
-    enabled: false
+    enabled: true
     domain: bld
     title: Real estate sales by administrative unit and quarter (prices Q25 to Q75)
     period: multi-year
@@ -457,7 +457,7 @@ tables:
       - {column: CD_REFNIS, references: ref_municipality, referenced_column: CD_REFNIS}
 
   - table: mob_car_household_sector
-    enabled: false
+    enabled: true
     domain: mob
     title: Households and cars by statistical sector
     period: 2017-2025
@@ -479,7 +479,7 @@ tables:
       - {column: CD_REFNIS, references: ref_municipality, referenced_column: CD_REFNIS}
 
   - table: mob_road_accident_history
-    enabled: false
+    enabled: true
     domain: mob
     title: Road accidents with casualties, 2017 to 2024
     period: 2017-2024
@@ -503,7 +503,7 @@ tables:
       - {column: CD_MUNTY_REFNIS, references: ref_municipality, referenced_column: CD_REFNIS}
 
   - table: pop_census_household_size_sector
-    enabled: false
+    enabled: true
     domain: pop
     title: "Census 2021: private households by statistical sector and size"
     period: "2021-01-01"
@@ -516,7 +516,7 @@ tables:
     primary_key: [CD_SECTOR, CD_SPH]
 
   - table: pop_census_tenure_sector
-    enabled: false
+    enabled: true
     domain: pop
     title: "Census 2021: private households by statistical sector and tenure (owner, tenant)"
     period: "2021-01-01"
@@ -529,7 +529,7 @@ tables:
     primary_key: [CD_SECTOR, CD_TSH]
 
   - table: bld_census_dwelling_period_sector
-    enabled: false
+    enabled: true
     domain: bld
     title: "Census 2021: occupants of conventional dwellings by statistical sector and period of construction"
     period: "2021-01-01"
@@ -542,7 +542,7 @@ tables:
     primary_key: [CD_SECTOR, CD_POC]
 
   - table: bld_census_dwelling_ownership_sector
-    enabled: false
+    enabled: true
     domain: bld
     title: "Census 2021: occupied conventional dwellings by statistical sector and ownership"
     period: "2021-01-01"
