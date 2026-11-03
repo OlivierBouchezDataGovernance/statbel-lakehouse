@@ -16,7 +16,9 @@
 # COMMAND ----------
 
 import copy
+import errno
 import os
+import time
 
 import yaml
 
@@ -63,10 +65,33 @@ def find_project_root(start=None):
         folder = parent
 
 
+def read_text(path, attempts=3):
+    """Return the content of a text file.
+
+    Serverless compute sometimes fails to read workspace files with an
+    input/output error (errno 5): the function tries again, then downloads a
+    workspace file through the Workspace API.
+    """
+    for attempt in range(attempts):
+        try:
+            with open(path, encoding="utf-8") as text_file:
+                return text_file.read()
+        except OSError as error:
+            if error.errno != errno.EIO:
+                raise
+            failure = error
+            time.sleep(2 ** attempt)
+    if not path.startswith("/Workspace/"):
+        raise failure
+    from databricks.sdk import WorkspaceClient
+    print(f"{path}: read through the Workspace API ({failure})")
+    with WorkspaceClient().workspace.download(path[len("/Workspace"):]) as remote:
+        return remote.read().decode("utf-8")
+
+
 def load_yaml(path):
     """Read a YAML file."""
-    with open(path, encoding="utf-8") as yaml_file:
-        return yaml.safe_load(yaml_file)
+    return yaml.safe_load(read_text(path))
 
 
 def load_environment():

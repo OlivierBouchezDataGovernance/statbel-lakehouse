@@ -48,7 +48,53 @@ resources:
             notebook_path: ./notebooks/03_publish_bigquery.py
       max_concurrent_runs: 1
 
+    # Catch-up: the same tasks with tables = stale, so only the enabled tables
+    # that are not up to date are reloaded (never loaded, last load failed,
+    # source or file changed since the last load) and then published, with the
+    # enabled tables missing from BigQuery.
+    #   databricks bundle run statbel_catchup
+    statbel_catchup:
+      name: statbel-catchup
+      description: >-
+        Statbel open data, catch-up: reloads and publishes only the tables
+        that are not up to date (see stale_tables in notebooks/lib/transform).
+      parameters:
+        - name: catalog
+          default: workspace
+        - name: schema
+          default: statbel
+        - name: tables
+          default: stale
+      tasks:
+        - task_key: catalog
+          notebook_task:
+            notebook_path: ./notebooks/01_statbel_catalog.py
+        - task_key: load
+          depends_on:
+            - task_key: catalog
+          notebook_task:
+            notebook_path: ./notebooks/02_load_statbel.py
+        - task_key: tags
+          depends_on:
+            - task_key: load
+          run_if: ALL_DONE
+          notebook_task:
+            notebook_path: ./notebooks/04_governance_tags.py
+        - task_key: publish
+          depends_on:
+            - task_key: tags
+          run_if: ALL_DONE
+          notebook_task:
+            notebook_path: ./notebooks/03_publish_bigquery.py
+      max_concurrent_runs: 1
+
 targets:
   dev:
     mode: development
     default: true
+  # Databricks on Google Cloud, europe-west3 (Frankfurt): the data never leaves the EU. The host comes from the
+  # CLI profile "eu" (databricks auth login --host <workspace URL> --profile eu). See docs/install_eu.md.
+  eu:
+    mode: development
+    workspace:
+      profile: eu

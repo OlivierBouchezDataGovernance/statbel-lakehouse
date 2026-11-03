@@ -134,6 +134,92 @@ def load_bronze(table):
 # COMMAND ----------
 
 # MAGIC %md
+# MAGIC ## Catch-up: tables that are not up to date
+# MAGIC
+# MAGIC Used by the widget value `tables = stale`. An enabled table is reloaded
+# MAGIC when one of these holds, read from `run_report` and the Statbel server:
+# MAGIC
+# MAGIC | Reason | Check |
+# MAGIC |---|---|
+# MAGIC | never loaded | no silver table, or no `rows_silver` in `run_report` |
+# MAGIC | last load failed | a `load_failed` after the last `rows_silver` |
+# MAGIC | source changed | a URL of `datasets.yml` not loaded in the last successful run |
+# MAGIC | file updated | `Last-Modified` of the file (HTTP HEAD) after the last successful load |
+# MAGIC | server unreachable | the HEAD request (or the mirror) fails: the table is kept, the load reports the error |
+# MAGIC
+# MAGIC With a mirror (`statbel.mirror`), "file updated" compares the Last-Modified
+# MAGIC that `scripts/mirror_statbel.py` recorded: run it before the catch-up job.
+
+# COMMAND ----------
+
+def _source_modified(url):
+    """Last-Modified of a source file (UTC datetime), None if not given.
+
+    Read from the mirror bucket when statbel.mirror is set (the copy of the
+    file there carries the Last-Modified of Statbel)."""
+    if MIRROR:
+        value = mirror_last_modified(url)
+    else:
+        response = requests.head(url, headers={"User-Agent": USER_AGENT},
+                                 timeout=60, allow_redirects=True)
+        response.raise_for_status()
+        value = response.headers.get("Last-Modified")
+    if not value:
+        return None
+    from email.utils import parsedate_to_datetime
+    return parsedate_to_datetime(value).astimezone(datetime.timezone.utc)
+
+
+def stale_tables(tables):
+    """Enabled tables to reload, each with the reason, from run_report."""
+    history = {}
+    if table_exists("run_report"):
+        rows = (spark.table(table_name("run_report"))
+                .where(F.col("CHECK_NAME").isin("rows_silver", "load_failed",
+                                                 "rows_bronze"))
+                .select("RUN_ID", "RUN_AT", "TABLE_NAME", "CHECK_NAME",
+                        "DETAIL").collect())
+        for row in rows:
+            history.setdefault(row.TABLE_NAME, []).append(row)
+
+    stale = []
+    for table in [t for t in tables if t["enabled"]]:
+        name = table["table"]
+        events = history.get(name, [])
+        loads = [e for e in events if e.CHECK_NAME == "rows_silver"]
+        last = max(loads, key=lambda e: e.RUN_AT) if loads else None
+        reason = None
+        if not table_exists(f"silver_{name}") or last is None:
+            reason = "never loaded"
+        elif any(e.CHECK_NAME == "load_failed" and e.RUN_AT > last.RUN_AT
+                 for e in events):
+            reason = "last load failed"
+        else:
+            loaded = {e.DETAIL for e in events if e.RUN_ID == last.RUN_ID
+                      and e.CHECK_NAME == "rows_bronze"}
+            loaded_at = last.RUN_AT.replace(tzinfo=datetime.timezone.utc)
+            for source in table["sources"]:
+                if source["url"] not in loaded:
+                    reason = f"source changed: {source['url']}"
+                    break
+                try:
+                    modified = _source_modified(source["url"])
+                except Exception as error:  # noqa: BLE001
+                    reason = f"server unreachable: {type(error).__name__}"
+                    break
+                if modified and modified > loaded_at:
+                    reason = f"file updated on {modified:%Y-%m-%d}"
+                    break
+        if reason:
+            print(f"{name}: {reason}")
+            stale.append(table)
+        else:
+            print(f"{name}: up to date (loaded {last.RUN_AT:%Y-%m-%d %H:%M})")
+    return stale
+
+# COMMAND ----------
+
+# MAGIC %md
 # MAGIC ## Silver
 
 # COMMAND ----------
