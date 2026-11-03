@@ -1,0 +1,13 @@
+[Unit]
+Description=Statbel mirror: copy the new Statbel files to gs://strong-aegis-512509-r4-statbel-landing (EU Databricks pipeline)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=olivier
+WorkingDirectory=/home/olivier/statbel-mirror
+# authentication: the service account of the VM (metadata server), no key file
+ExecStart=/home/olivier/.venvs/statbel-mirror/bin/python scripts/mirror_statbel.py --bucket strong-aegis-512509-r4-statbel-landing --enabled-only
+Nice=10
+TimeoutStartSec=45min
